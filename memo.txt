@@ -1,0 +1,20 @@
+start is 0
+end is 1
+#status is included in adjacency
+
+stage 1
+first check input
+count rooms
+
+stage 2
+add rooms
+start from 2
+if ##start
+next = 0
+if ##end
+next = 1
+
+get links with namelist
+
+
+
