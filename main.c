@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/08/26 23:30:36 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/08/28 14:39:36 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,74 +228,60 @@ int get_min_cut(data)
 	return(min_cut_start);
 }
 
+int is_adjacent(t_path *data, int room, int room2)
+{
+	if (ADJ_GRID[room][room2] == ADJACENT)
+		return (1);
+	return(0);
+}
 
-void visit_neighbours(t_path *data, int current_node)
+void visit(t_path *data, int room, int prev_room)
+{
+	ADJ_GRID[room][prev_room] = prev_room;
+}
+
+void queue_add(data, room_number)
+{
+	QUEUE[Q_SIZE] = room_number;
+	Q_SIZE++;
+}
+
+void queue_remove_head(t_path *data)
+{
+	ft_memmove(&QUEUE[1], QUEUE, sizeof(int)* Q_SIZE);
+	Q_SIZE--
+}
+
+/*
+// Looks up all nodes in BFS and marks previous on
+// the adjacecency_grid . Is_adjacent also checkes
+// has node been visited already;
+*/
+void visit_all_nodes(t_path *data)
 {
 	int i;
+	int room_number;
 
 	i = 0;
-	while (ROOM_COUNT > i)
-	{
-
-
-
-
-	}
-
-}
-
-void mark_neighbours(t_path *data int current_node)
-{
-	int i;
-
-	i = 0;
-	while (ROOM_COUNT > i)
-	{
-		if (ADJ_GRID[current_node][i]
-			&& !PREV_NODE[i])
-			PREV_NODE[i] = current_node
-	}
-}
-
-void fill_queue(t_path *data, int node, int depth)
-{
-	jos depth on kolme
-	if !depth
-		save node numbers on here
-	while(depth--)
-	{
-		while()
-			fill_queue(data, depth);
-
-	}
-
-}
-
-
-int *visit_all_nodes(t_path *data, int *values);
-{
-	int i;
-	int *new_queue;
-	int q_size;
-
-	new_queue = ft_memalloc(sizeof(int) * ROOM_COUNT);
+	Q_SIZE = 1;
 	while(Q_SIZE)
 	{
-		while(i < ROOM_COUNT)
+		room_number = 0;
+		while(ROOM_COUNT > room_number)
 		{
-			if (ADJ_GRID[value][i] == ADJACENT)
+			if (is_adjacent(data, room_number, QUEUE[i])
 			{
-			ADJ_GRID[value][i] = value;
-			QUEUE[Q_SIZE] = i;
-			Q_SIZE++;
+				if (QUEUE(i) == SINK)
+					break ;
+				visit(data, room_number, QUEUE[i]);
+				queue_add(data, room_number)
 			}
+			++room_number;
 		}
-
-
-
+		queue_remove_head(data);
+		++i;
+	}
 }
-
-
 
 void get_paths(t_path *data)
 {
