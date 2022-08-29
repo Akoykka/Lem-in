@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/08/28 14:39:36 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/08/29 09:33:29 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,27 +204,27 @@ void save_valid_links(t_path *data, int argc, char **argv)
 int get_min_cut(data)
 {
 	int i;
-	int start_cut;
-	int end_cut;
+	int min_cut_start;
+	int min_cut_sink;
 
 	i = 0;
 	min_cut_start = 0;
-	while (i < data->room_count)
+	min_cut_sink = 0;
+	while (i < ROOM_COUNT)
 	{
-		if ((data->adj_grid)[START][i])
+		if (ADJ_GRID[START][i])
 			++min_cut_start;
 		++i;
 	}
 	i = 0;
-	min_cut_end = 0;
-	while (i < data->room_count)
+	while (i < ROOM_COUNT)
 	{
-		if ((data->adj_grid)[END][i])
-			++min_cut_end;
+		if (ADJ_GRID[SINK][i])
+			++min_cut_sink;
 		++i;
 	}
-	if (min_cut_end < min_cut_start)
-		return (min_cut_end);
+	if (min_cut_sink < min_cut_start)
+		return (min_cut_sink);
 	return(min_cut_start);
 }
 
@@ -232,12 +232,13 @@ int is_adjacent(t_path *data, int room, int room2)
 {
 	if (ADJ_GRID[room][room2] == ADJACENT)
 		return (1);
-	return(0);
+	return (0);
 }
 
 void visit(t_path *data, int room, int prev_room)
 {
-	ADJ_GRID[room][prev_room] = prev_room;
+	if (room != START || room != SINK)
+		ADJ_GRID[room][prev_room] = prev_room;
 }
 
 void queue_add(data, room_number)
@@ -248,8 +249,8 @@ void queue_add(data, room_number)
 
 void queue_remove_head(t_path *data)
 {
-	ft_memmove(&QUEUE[1], QUEUE, sizeof(int)* Q_SIZE);
-	Q_SIZE--
+	ft_memmove(&QUEUE[1], QUEUE, sizeof(int) * Q_SIZE);
+	Q_SIZE--;
 }
 
 /*
@@ -261,9 +262,13 @@ void visit_all_nodes(t_path *data)
 {
 	int i;
 	int room_number;
+	t_queue queue;
 
 	i = 0;
 	Q_SIZE = 1;
+	QUEUE = (int *)ft_memalloc(sizeof(int) * ROOM_COUNT + 1);
+	//if (!QUEUE)
+	//	exit_procedure();
 	while(Q_SIZE)
 	{
 		room_number = 0;
@@ -271,7 +276,7 @@ void visit_all_nodes(t_path *data)
 		{
 			if (is_adjacent(data, room_number, QUEUE[i])
 			{
-				if (QUEUE(i) == SINK)
+				if (room_number == SINK)
 					break ;
 				visit(data, room_number, QUEUE[i]);
 				queue_add(data, room_number)
@@ -283,16 +288,31 @@ void visit_all_nodes(t_path *data)
 	}
 }
 
-void get_paths(t_path *data)
-{
-	int max_paths;
+if adjacency_grids value is 0 or above, node has been visited and
+set to previous nodes values which will lead back to start
+see if there is previous numbers next to sink go check sinks
+	adjacent vertices for previous is_only_numbers
 
-	max_paths = get_min_cut(data);
-	maxpaths = ft_memalloc(max_paths);
+void save_paths(t_path *data)
+{
+	while(ROOM_COUNT > i)
+	{
+		if (is_adjacent(data, SINK, i)
+			&& ADJ_GRID[i][SINK] <= 0)
+		{
+
+		}
+	}
+
+}
+
+void get_paths(t_path *data, int antcount)
+{
+	PATHS = ft_memalloc(sizeof(int *) * get_min_cut(data));
 	while(maxpaths reached || all path combinations tried)
 	{
 		visit_all_nodes()
-		compare_paths()
+		save_paths(data)
 		make_one_path_available()
 	}
 
@@ -306,7 +326,8 @@ int main(int argc, char **argv)
 	argv += 1;
 	save_valid_rooms(&data, argc, argv);
 	save_valid_links(&data, argc, argv);
-	get_paths()
+	trim_nodes(&data) /// destroy nodes with only one neighbour
+	get_paths(&data)
 	march_ants()
 	free_all()
 	exit()
