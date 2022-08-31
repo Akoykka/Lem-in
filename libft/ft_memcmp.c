@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lem_in.h                                           :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/08/31 21:04:47 by akoykka          ###   ########.fr       */
+/*   Created: 2021/11/12 14:10:29 by akoykka           #+#    #+#             */
+/*   Updated: 2022/06/03 09:42:43 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEM_IN_H
-# define LEM_IN_H
-# define ADJACENT 1
-# define START 1
-# define END 2
-# define ADJ_GRID (data->adj_grid)
-# define ROOM_COUNT (data->room_count)
+#include "includes/libft.h"
 
-typedef struct s_path
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	int		ant_count;
-	int		room_count;
-	char	**name_list;
-	int		**adj_grid;
-	int		*paths;
-	int		*visited;
-}				t_path;
+	const unsigned char	*str1;
+	const unsigned char	*str2;
 
-typedef struct s_queue
-{
-	int		*queue;
-	int		q_size;
-}			t_queue;
-
-
-#endif
+	str1 = s1;
+	str2 = s2;
+	while (n--)
+	{
+		if (*str1 != *str2)
+			return (*str1 - *str2);
+		++str1;
+		++str2;
+	}
+	return (0);
+}

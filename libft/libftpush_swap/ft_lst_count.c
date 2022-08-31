@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lem_in.h                                           :+:      :+:    :+:   */
+/*   ft_lst_count.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/08/31 21:04:47 by akoykka          ###   ########.fr       */
+/*   Created: 2021/12/08 15:04:55 by akoykka           #+#    #+#             */
+/*   Updated: 2022/06/07 16:23:20 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEM_IN_H
-# define LEM_IN_H
-# define ADJACENT 1
-# define START 1
-# define END 2
-# define ADJ_GRID (data->adj_grid)
-# define ROOM_COUNT (data->room_count)
+#include "includes/libft.h"
 
-typedef struct s_path
+size_t	ft_lst_count(t_list *start)
 {
-	int		ant_count;
-	int		room_count;
-	char	**name_list;
-	int		**adj_grid;
-	int		*paths;
-	int		*visited;
-}				t_path;
+	size_t	i;
+	t_list	*temp;
 
-typedef struct s_queue
-{
-	int		*queue;
-	int		q_size;
-}			t_queue;
-
-
-#endif
+	i = 0;
+	if (!start)
+		return (i);
+	temp = start;
+	while (temp)
+	{
+		temp = temp->next;
+		++i;
+	}
+	return (i);
+}

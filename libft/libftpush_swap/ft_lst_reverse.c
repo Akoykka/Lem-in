@@ -1,38 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lem_in.h                                           :+:      :+:    :+:   */
+/*   ft_lst_reverse.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/08/31 21:04:47 by akoykka          ###   ########.fr       */
+/*   Created: 2022/06/17 11:08:34 by akoykka           #+#    #+#             */
+/*   Updated: 2022/06/17 11:09:49 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEM_IN_H
-# define LEM_IN_H
-# define ADJACENT 1
-# define START 1
-# define END 2
-# define ADJ_GRID (data->adj_grid)
-# define ROOM_COUNT (data->room_count)
+#include "includes/libft.h"
 
-typedef struct s_path
+void ft_lst_reverse(t_list **head)
 {
-	int		ant_count;
-	int		room_count;
-	char	**name_list;
-	int		**adj_grid;
-	int		*paths;
-	int		*visited;
-}				t_path;
+	t_list	*temp_prevnode;
+	t_list	*temp;
+	t_list	*temp_nextnode;
 
-typedef struct s_queue
-{
-	int		*queue;
-	int		q_size;
-}			t_queue;
-
-
-#endif
+	temp_prevnode = NULL;
+	temp_nextnode = NULL;
+	if (!head || !*head)
+		return ;
+	temp = *head;
+	while (temp)
+	{
+		temp_nextnode = temp->next;
+		temp->next = temp_prevnode;
+		temp_prevnode = temp;
+		temp = temp_nextnode;
+	}
+	*head = temp_prevnode;
+}

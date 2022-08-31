@@ -1,38 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lem_in.h                                           :+:      :+:    :+:   */
+/*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/08/31 21:04:47 by akoykka          ###   ########.fr       */
+/*   Created: 2021/11/20 18:08:47 by akoykka           #+#    #+#             */
+/*   Updated: 2022/06/03 09:42:43 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEM_IN_H
-# define LEM_IN_H
-# define ADJACENT 1
-# define START 1
-# define END 2
-# define ADJ_GRID (data->adj_grid)
-# define ROOM_COUNT (data->room_count)
+#include "includes/libft.h"
 
-typedef struct s_path
+void	ft_putnbr(int n)
 {
-	int		ant_count;
-	int		room_count;
-	char	**name_list;
-	int		**adj_grid;
-	int		*paths;
-	int		*visited;
-}				t_path;
-
-typedef struct s_queue
-{
-	int		*queue;
-	int		q_size;
-}			t_queue;
-
-
-#endif
+	if (n == 2147483647)
+	{
+		write(1, "2147483647", 10);
+		return ;
+	}
+	if (n == -2147483648)
+	{
+		write(1, "-2147483648", 11);
+		return ;
+	}
+	if (n < 0)
+	{
+		n = -n;
+		write(1, "-", 1);
+	}
+	if (n >= 10)
+	{
+		ft_putnbr(n / 10);
+		n = n % 10;
+	}
+	if (n < 10)
+	{
+		n = n + '0';
+		write(1, &n, 1);
+	}
+}

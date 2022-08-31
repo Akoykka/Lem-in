@@ -1,38 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lem_in.h                                           :+:      :+:    :+:   */
+/*   ft_lstadd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/08/31 21:04:47 by akoykka          ###   ########.fr       */
+/*   Created: 2021/12/01 21:05:31 by akoykka           #+#    #+#             */
+/*   Updated: 2022/06/03 09:42:43 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEM_IN_H
-# define LEM_IN_H
-# define ADJACENT 1
-# define START 1
-# define END 2
-# define ADJ_GRID (data->adj_grid)
-# define ROOM_COUNT (data->room_count)
+#include "includes/libft.h"
 
-typedef struct s_path
+void	ft_lstadd(t_list **alst, t_list *new)
 {
-	int		ant_count;
-	int		room_count;
-	char	**name_list;
-	int		**adj_grid;
-	int		*paths;
-	int		*visited;
-}				t_path;
+	t_list	*temp;
 
-typedef struct s_queue
-{
-	int		*queue;
-	int		q_size;
-}			t_queue;
-
-
-#endif
+	temp = *alst;
+	*alst = new;
+	new->next = temp;
+}
