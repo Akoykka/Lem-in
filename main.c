@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/08/31 21:04:46 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/01 22:23:30 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,30 +59,82 @@ void queue_remove_head(t_queue *queue)
 	queue->q_size--;
 }
 
-get_new_path()
+int calc_turns(t_path *data, int *paths)
+{
+	ants / path_count + path_count + lenght
+	
 
 
+
+
+}
+
+
+int get_winner_paths(t_path *data, int *best, int *contender)
+{
+	if (calc_turns(data, contender) < calc_turns(data, best))
+	{
+		free(best);
+		best = contender;
+		return (1);
+	}
+	free(contender);
+	contender = NULL;
+	return (0);
+}
+
+
+
+int is_there_new_path(t_path *data, int start_node)
+{
+	int *best_path;
+	int *contender;
+	t_queue q;
+
+	best_path = NULL;
+	fill_queue(data, &q);
+	while(q.size)
+	{
+
+		queuemanipulation
+		contender = bfs(data, q.queue)
+		get_winner_paths(data->ant_count, best_path, contender);
+	}
+
+
+}
+
+void queue_empty_start_neighbours(t_path *data, t_queue *q)
+{
+
+
+
+
+}
 
 // if number has previous node data (0 or higher)
 
 void get_paths(t_path *data)
 {
 	//int		min_cut;
-	t_queue	start_node;
+	t_queue	q;
 	int		path_found;
 
-	//min_cut = get_min_cut(data);
-	while(min_cut > path_count && path_found)
+	//min_cut = get_min_cut(data); while(min_cut > path_count
+	path_found = 1;
+
+	while(path_found)
 	{
 		path_found = 0;
-		get_start_adj_n_empty(data, &start_node);
-		while (data->q_size)
+		queue_empty_start_neighbours(data, &q);
+		while (q.size)
 		{
-			if (get_new_path(data, start_node->queue))
+			if (is_there_new_path(data, q.queue))
 				path_found = 1;
-			queue_remove_head(&start_node)
+			relax_visited(data);
+			queue_remove_head(&q)
 		}
-	}	
+	}
 }
 
 int main(int argc, char **argv)
@@ -94,7 +146,7 @@ int main(int argc, char **argv)
 	save_valid_rooms(&data, argc, argv);
 	save_valid_links(&data, argc, argv);
 	//trim_nodes(&data);
-	get_paths(&data);`
+	get_paths(&data);
 	march_ants();
 	//free_all();
 	exit(1);
