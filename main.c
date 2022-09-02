@@ -6,39 +6,12 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/01 22:23:30 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/02 19:28:26 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/includes/libft.h"
 #include "lem_in.h"
-
-int get_min_cut(data)
-{
-	int i;
-	int min_cut_start;
-	int min_cut_sink;
-
-	i = 0;
-	min_cut_start = 0;
-	min_cut_sink = 0;
-	while (i < ROOM_COUNT)
-	{
-		if (ADJ_GRID[START][i])
-			++min_cut_start;
-		++i;
-	}
-	i = 0;
-	while (i < ROOM_COUNT)
-	{
-		if (ADJ_GRID[SINK][i])
-			++min_cut_sink;
-		++i;
-	}
-	if (min_cut_sink < min_cut_start)
-		return (min_cut_sink);
-	return(min_cut_start);
-}
 
 int is_adjacent(t_path *data, int room, int room2)
 {
@@ -47,35 +20,71 @@ int is_adjacent(t_path *data, int room, int room2)
 	return (0);
 }
 
-void queue_add(data, room_number)
+void queue_remove_head(t_queue *q)
 {
-	QUEUE[Q_SIZE] = room_number;
-	Q_SIZE++;
+	if (!q->size)
+		return ;
+	ft_memmove(&(q->queue[1]), q->queue, sizeof(int) * q->size);
+	q->size--;
 }
 
-void queue_remove_head(t_queue *queue)
+
+int pathlen(int *paths, int node)
 {
-	ft_memmove(queue->queue[1], queue->queue, sizeof(int) * queue->q_size);
-	queue->q_size--;
+	int len;
+
+	len = 0;
+	while (node != START)
+	{
+		node = paths[node];
+		++len;
+	}
+	return (len);
+
 }
+
+int get_turn_count(int ants, t_turns *turns)
+{
+	int ant_cap;
+
+	ant_cap = turns->path_count * turns->longest_len - turns->total_len;
+	
+	if ((ants - ant_cap) % turns->path_count)
+		return ((ants - ant_cap) / turns->path_count + 1) ;
+	return ((ants - ant_cap) / turns->path_count);
+}
+
 
 int calc_turns(t_path *data, int *paths)
 {
-	ants / path_count + path_count + lenght
-	
+	int i;
+	int path_len;
+	t_turns turn_count;
 
-
-
-
+	i = 0;
+	ft_memset(&turn_count, 0, sizeof(t_turns));
+	while(data->room_count > i)
+	{
+		if (ADJ_GRID[END][i] && paths[i])
+		{
+			path_len = pathlen(paths, i);
+			if (path_len > turn_count.longest_len)
+				turn_count.longest_len = path_len;
+			turn_count.total_len += path_len;
+			++turn_count.path_count;
+		}		
+		++i;
+	}
+	return(get_turn_count(data->ant_count, &turn_count));
 }
 
 
-int get_winner_paths(t_path *data, int *best, int *contender)
+int get_winner_paths(t_path *data, int **best, int *contender)
 {
-	if (calc_turns(data, contender) < calc_turns(data, best))
+	if (!*best || calc_turns(data, contender) < calc_turns(data, *best))
 	{
-		free(best);
-		best = contender;
+		free(*best);
+		*best = contender;
 		return (1);
 	}
 	free(contender);
@@ -83,58 +92,91 @@ int get_winner_paths(t_path *data, int *best, int *contender)
 	return (0);
 }
 
-
-
-int is_there_new_path(t_path *data, int start_node)
+char *bfs(t_path *data, int root_node)
 {
-	int *best_path;
-	int *contender;
 	t_queue q;
 
-	best_path = NULL;
-	fill_queue(data, &q);
-	while(q.size)
+	q.size = 1;
+	q.queue[q.size] = root_node;
+	(data->paths)[root_node] = START;
+	while(q.size || q.includes.end == END)
 	{
+		queue_fill();
+		if (queue is collision)
+		queue_visit(); //except if its start
 
-		queuemanipulation
-		contender = bfs(data, q.queue)
-		get_winner_paths(data->ant_count, best_path, contender);
+
+
+
 	}
 
 
+
+
+
+
+
+	
 }
 
+int alter_paths(t_path *data, int start_node)
+{
+	int *best;
+	int *contender;
+	t_queue q;
+	int path_altered;
+
+	path_altered = 0;
+	best = NULL;
+	fill_queue(data, &q);
+	while(q.size)
+	{
+		contender = bfs(data, q.queue);
+		if (get_winner_paths(data, &best, contender))
+			path_altered = 1;
+	}
+	return (path_altered);
+}
+
+void queue_add_room(t_queue *q, int room_number)
+{
+	q->queue[q->size] = room_number;
+	++q->size;
+}
 void queue_empty_start_neighbours(t_path *data, t_queue *q)
 {
+	int room_number;
 
-
-
-
+	room_number = 0;
+	while(data->room_count > room_number)
+	{
+		if(data->adj_grid[START][room_number] && !(data->paths)[room_number])
+			queue_add(q, room_number);
+	}
 }
 
 // if number has previous node data (0 or higher)
 
 void get_paths(t_path *data)
 {
-	//int		min_cut;
 	t_queue	q;
-	int		path_found;
+	int		paths_altered;
 
-	//min_cut = get_min_cut(data); while(min_cut > path_count
-	path_found = 1;
-
-	while(path_found)
+	q.queue = (int *)ft_memalloc((sizeof(int) * data->room_count + 1));
+	paths_altered = 1;
+	while (paths_altered)
 	{
-		path_found = 0;
+		paths_altered = 0;
 		queue_empty_start_neighbours(data, &q);
-		while (q.size)
+		while (q.size && !paths_altered)
 		{
-			if (is_there_new_path(data, q.queue))
-				path_found = 1;
+			if (alter_paths(data, q.queue))
+				paths_altered = 1;
 			relax_visited(data);
-			queue_remove_head(&q)
+			queue_remove_head(&q);
 		}
 	}
+	free(q.queue);
 }
 
 int main(int argc, char **argv)

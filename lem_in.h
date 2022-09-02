@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/01 22:21:16 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/02 19:28:28 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,13 @@ typedef struct s_queue
 	int		*queue;
 	int		size;
 }			t_queue;
+
+typedef struct s_turns
+{
+	int total_len;
+	int longest_len;
+	int path_count;
+}			t_turns;
 
 
 #endif
