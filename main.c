@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/04 16:28:25 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/05 00:28:58 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int get_turn_count(int ants, t_turns *turns)
 	int ant_cap;
 
 	ant_cap = turns->path_count * turns->longest_len - turns->total_len;
-	
+
 	if (ants - ant_cap <= 0)
 		return(calc_small_ant_amount_turn_count);
 	if ((ants - ant_cap) % turns->path_count)
@@ -74,7 +74,7 @@ int calc_turns(t_path *data, int *paths)
 				turn_count.longest_len = path_len;
 			turn_count.total_len += path_len;
 			++turn_count.path_count;
-		}		
+		}
 		++i;
 	}
 	return(get_turn_count(data->ant_count, &turn_count));
@@ -98,32 +98,48 @@ char *cpy_paths(t_path *data, char *paths, int collision_point)
 {
 	char *new;
 
-	new = 
+	new =
 	if (!new)
 		exit (1);
 	paths[collision_point]
 
 
 }
+void visit_neighbours(t_path *data, int room, t_queue *queue)
+{
+	int i;
 
+	i = 1;
+	while(data->room_count < i)
+	{
+		if not visited
+		{
+		if (is_collision(data, paths, q.queue))
+			queue_add( room * -1)
+		else
+			visit_node();
+			queue_add (room);
+		}
+	}
+}
 
-char *bfs(t_path *data, char *paths, int root_node)
+char *bfs(t_path *data, char *paths int root_node)
 {
 	t_queue q;
 	int *best;
 	int *contender;
 
+	best = NULL;
 	q.size = 1;
 	q.queue[0] = root_node;
 	paths[root_node] = START;
 	while(q.size)
-	{	
-		queue_add_unvisited_neighbours();
-		queue_remove_head();
-		if (is_collision(data, paths, q.queue))
+	{
+		queue_neighbours()
+		if (queue is negative number its collision)
 		{
-			contender_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
-			visit the copy on collision_point
+			best = (int *)ft_memalloc(sizeof(int) * data->room_count);
+			visit the copy on collision_point which is the head of queue
 			visit collisionpoint(mark prev on new)
 			copy newpath to only completed paths + current path being built
 			visit new_path_till the collision point including the collision
@@ -131,8 +147,11 @@ char *bfs(t_path *data, char *paths, int root_node)
 			contender = bfs start of collided_path
 			compare the best free the worse save better;
 		}
-		else (queue includes end_node_neighbours)
+		queue_remove_head();
+
+		if (queue == end_node)
 			make comparison;
+
 	}
 	if(best = NULL)
 		return NULL;
