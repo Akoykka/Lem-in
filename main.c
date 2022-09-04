@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/02 19:28:26 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/04 16:27:04 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int get_turn_count(int ants, t_turns *turns)
 
 	ant_cap = turns->path_count * turns->longest_len - turns->total_len;
 	
+	if (ants - ant_cap <= 0)
+		return(calc_small_ant_amount_turn_count);
 	if ((ants - ant_cap) % turns->path_count)
 		return ((ants - ant_cap) / turns->path_count + 1) ;
 	return ((ants - ant_cap) / turns->path_count);
@@ -92,31 +94,49 @@ int get_winner_paths(t_path *data, int **best, int *contender)
 	return (0);
 }
 
-char *bfs(t_path *data, int root_node)
+char *cpy_paths(t_path *data, char *paths, int collision_point)
+{
+	char *new;
+
+	new = 
+	if (!new)
+		exit (1);
+	paths[collision_point]
+
+
+}
+
+
+char *bfs(t_path *data, char *paths, int root_node)
 {
 	t_queue q;
+	int *best;
+	int *contender;
 
 	q.size = 1;
-	q.queue[q.size] = root_node;
-	(data->paths)[root_node] = START;
-	while(q.size || q.includes.end == END)
-	{
-		queue_fill();
-		if (queue is collision)
-		queue_visit(); //except if its start
-
-
-
-
+	q.queue[0] = root_node;
+	paths[root_node] = START;
+	while(q.size)
+	{	
+		queue_add_unvisited_neighbours();
+		queue_remove_head();
+		if (is_collision(data, paths, q.queue))
+		{
+			contender_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
+			visit the copy on collision_point
+			visit collisionpoint(mark prev on new)
+			copy newpath to only completed paths + current path being built
+			visit new_path_till the collision point including the collision
+			clear_collided_path_to_the_start_of_path
+			contender = bfs start of collided_path
+			compare the best free the worse save better;
+		}
+		else (queue includes end_node_neighbours)
+			make comparison;
 	}
-
-
-
-
-
-
-
-	
+	if(best = NULL)
+		return NULL;
+	return (best);
 }
 
 int alter_paths(t_path *data, int start_node)
@@ -131,7 +151,7 @@ int alter_paths(t_path *data, int start_node)
 	fill_queue(data, &q);
 	while(q.size)
 	{
-		contender = bfs(data, q.queue);
+		contender = bfs(data, data->paths, q.queue);
 		if (get_winner_paths(data, &best, contender))
 			path_altered = 1;
 	}
@@ -163,6 +183,8 @@ void get_paths(t_path *data)
 	int		paths_altered;
 
 	q.queue = (int *)ft_memalloc((sizeof(int) * data->room_count + 1));
+	if (!q.queue)
+		exit (1);
 	paths_altered = 1;
 	while (paths_altered)
 	{

@@ -81,17 +81,16 @@ jotka reroute operaation alla
 PLAN Nr 2
 
 
-Tehdaan adjacency list + residual list (fulkerson) mihin tallennetaan reitit
+Tehdaan adjacency list + paths mihin tallennetaan reitit
 adjacency list toimii myos visited listana (2 means visited_adjacent 1 = adjacent)
 
-haetaan nopein reitti. 
+haetaan nopein reitti random cellista
 Dfs 
 
-haetaan vapaasta start_noden naapurista painolla nondestructive manner uusi reitti
-endiin
+haetaan vapaasta start_noden naapurista uusi reitti endiin
 
 
-mikali sellainen loytyy, niin lisataan se residual listiin
+mikali sellainen loytyy, niin lisataan se alkuperaiseen pathiin
 
 rentoutetaan adjacencylista  jokaisen haun jalkeen
 
