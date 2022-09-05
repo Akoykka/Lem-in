@@ -6,15 +6,15 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/05 12:51:36 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/05 19:41:50 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEM_IN_H
 # define LEM_IN_H
 # define ADJACENT 1
-# define START 1
-# define END 2
+# define START 0
+# define END 1
 # define ADJ_GRID (data->adj_grid)
 # define ROOM_COUNT (data->room_count)
 # define COLLISION < 0
@@ -25,7 +25,7 @@ typedef struct s_path
 	int		room_count;
 	char	**name_list;
 	int		**adj_grid;
-	int		*paths;
+	int		*best_path;
 	int		turn_count;
 	int		*visited;
 
@@ -43,6 +43,12 @@ typedef struct s_turns
 	int longest_len;
 	int path_count;
 }			t_turns;
+
+/// PATH EVALUATION
+int pathlen(int *paths, int node);
+int get_turn_count(int ants, t_turns *turns);
+int calc_turns(t_path *data, int *paths);
+int get_winner(t_path *data, int **best, int *contender);
 
 
 #endif
