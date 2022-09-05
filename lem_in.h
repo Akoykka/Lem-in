@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/04 16:27:06 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/05 12:51:36 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # define END 2
 # define ADJ_GRID (data->adj_grid)
 # define ROOM_COUNT (data->room_count)
+# define COLLISION < 0
 
 typedef struct s_path
 {
