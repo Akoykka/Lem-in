@@ -104,4 +104,23 @@ ei myoskaan visitoida nodea vaan poistetaan queuesta.
 
 
 
+Taman hetkinen ongelma on dup paths miten tietaa ettei kopioi kahta tieta karttaan
+jotka yhta pitkia 
+		0
+	   / \ 
+  -->  0  0 <--
+	   \  /
+	    END
+
+
+5 pitkia
+
+6 pitka tilalle 
+kokeillaan rerouteja
+
+katkastaan joku 6 
+
+
+
+
 

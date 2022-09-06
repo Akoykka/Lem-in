@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/05 19:41:47 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/06 18:56:10 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,45 @@ void queue_add_room(t_queue *q, int room_number)
 	++q->size;
 }
 
-char *dup_paths(t_path *data, char *paths)
+void queue_add_end_neighbours(t_path *data, char *paths, t_queue *q)
 {
-	int *dup;
+	q->size = 0;
 
-	dup = (int *)ft_memalloc(sizeof(int)* data->room_count + 1);
-	if (!dup)
+	q->queue = (int *)ft_memalloc(sizeof(int) * data->room_count + 1);
+	if (!q->queue)
 		exit(1);
 	
 
 
+}
 
+char *dup_paths(t_path *data, char *paths)
+{
+	t_queue q;
+	int *dup;
+	int room_number;
+	int temp;
 
-	/// I want to dup everything without -1 signs;
-	/// next up is adding those minuses;
-
+	queue_add_end_neighbours(data, paths, &q);
+	room_number = 0;
+	dup = (int *)ft_memalloc(sizeof(int)* data->room_count + 1);
+	if (!dup)
+		exit(1);
+	while(q.size)
+	{
+		temp = q.queue;
+		while(temp != START)
+		{
+		dup[temp] = paths[temp];
+		if (dup[temp] < 0)
+			dup[temp] *= -1;
+		temp = paths[temp];
+		if (temp < 0)
+			temp *= -1;
+		}
+		queue_remove_head(&q);
+	}
+	return(dup);
 }
 int queue_add_adjacent(t_path *data, int *paths, t_queue *q)
 {
@@ -110,10 +134,38 @@ void visit_node(int node, int *path, int parent_room)
 	path[node] = parent_room;
 }
 
-char *handle_reroutes(t_path *data, char *paths, t_queue *q)
+
+void remove_duplicates(t_path *data, int *paths, int number)
+{
+	int room_number;
+
+	room_number = number + 1;
+	while (room_number < data->room_count)
+	{
+		if (paths[room_number] == number
+		|| paths[room_number] == number * -1) /// possible thingy for negative numbers
+			paths[room_number] = 0;
+	}
+}
+
+void clean_bfs_residue(t_path *data, int *paths)
+{
+	int room_number;
+
+	room_number = 2;
+	while (room_number < data->room_count)
+	{
+		if (ADJ_GRID[END][room_number])
+			remove_duplicates(data, paths, room_number);
+		++room_number;
+	}
+}
+
+
+void handle_reroutes(t_path *data, int *paths, t_queue *q)
 {
 	int *new_path;
-	int reroute_path;
+	int reroute_node;
 	int i;
 
 	i = 0;
@@ -124,20 +176,16 @@ char *handle_reroutes(t_path *data, char *paths, t_queue *q)
 			new_path = (int *)ft_memalloc(sizeof(int) * data->room_count + 1);
 			if (!new_path)
 				exit(1);
-			reroute_path = find_start_node(paths, (q->queue)[i]);
+			reroute_node = find_start_node(paths, (q->queue)[i]);
 			visit_node(i, new_path, (*q->queue) * -1);
 			new_path = dup_paths(data, paths);
+			clean_bfs_residue(data, paths);
 			set_latest_path_visited((q->queue)[i], new_path);
-			bfs(data, new_path, reroute_path);
+			bfs(data, new_path, reroute_node);
 			queue_remove_collision((q->queue)[i], q);
-			//free(new_path);
-			//new_path = NULL; BFS should take care of this one
 		}
 	}
 }
-
-void clean_residue
-
 
 void bfs(t_path *data, char *paths, int root_node)
 {
@@ -149,10 +197,10 @@ void bfs(t_path *data, char *paths, int root_node)
 	while(q.size)
 	{
 		queue_add_adjacent(data, paths, &q);
-		handle_reroutes(data, paths, &q);
-		if (is_end_reached(q, has end))/// i dunno
+		queue_handle_reroutes(data, paths, &q);
+		if (is_end_reached(&q, ))/// i dunno
 		{
-			clean_residue(paths, *(q.queue));
+			clean_bfs_residue(data, paths);
 			get_winner(data, *(data->best_path), paths);
 			q.size = 0;
 		}
@@ -181,30 +229,27 @@ void queue_empty_start_neighbours(t_path *data, t_queue *q)
 void get_paths(t_path *data)
 {
 	t_queue	q;
+	int		*paths;
 
 	q.queue = (int *)ft_memalloc((sizeof(int) * data->room_count + 1));
-	if (!q.queue)
+	paths = (int *)ft_memalloc((sizeof(int) * data->room_count + 1));
+	if (!q.queue || !paths)
 		exit (1);
 	queue_start_neighbours(data, &q);
 	while (q.size)
 	{
-			bfs(data, dup_paths(data, data->best_path), q.queue);
+			bfs(data, paths, q.queue);
 			queue_remove_head(&q);
 	}
 	free(q.queue);
 }
 
-int main(int argc, char **argv)
+int main(void)
 {
 	t_path data;
 
-	argc -= 1;
-	argv += 1;
-	save_valid_rooms(&data, argc, argv);
-	save_valid_links(&data, argc, argv);
-	//trim_nodes(&data);
+	read_input(&data);
 	get_paths(&data);
 	march_ants();
-	//free_all();
 	exit (0);
 }
