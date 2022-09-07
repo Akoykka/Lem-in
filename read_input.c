@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/07 14:38:38 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/07 15:27:11 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,16 +92,27 @@ void parse_link(t_path *data, char *str)
 
 int is_cmd_or_comment(t_path *data, char *line)
 {
-	jos ##start tai ##end tallenna jonnekki
+	static int start_found;
+	static int end_found;
 
-	jos # tai L ignoree ja return 0;
+	if(line[0] == '#')
+	{
+		if(!ft_strcmp(line, "##start"))
+		{
+				data->start = data->room_count;
+				start_found += 1;
+		}
 
-	jos invaliiidi printtaa errori ja exit
-
-
-
-
-
+		if (!ft_strcmp(line, "##end"))
+		{
+				data->end = data->room_count;
+				end_found += 1;
+		}
+	}
+	if (line[0] == 'L' || line[0] == '#' && line[1] == '#'
+		|| start_found == 2 || end_found == 2)
+		exit(1);
+	return (1);
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 12:03:31 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/07 12:19:40 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/07 15:33:48 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,4 @@ int hash(unsigned char *str)
 	return (hash % HASH_SIZE);
 }
 
-
+save_room()

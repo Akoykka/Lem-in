@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/07 14:38:39 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/07 15:18:18 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ typedef struct s_path
 	int		**adj_grid;
 	int		ant_count;
 	int		room_count;
+	int		start;
+	int		end;
 	
 	int		*best_path;
 	int		path_changed;
