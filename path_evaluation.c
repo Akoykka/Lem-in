@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 15:20:12 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/05 19:42:15 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/07 14:38:40 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,15 @@ int pathlen(int *paths, int node)
 
 int get_turn_count(int ants, t_turns *turns)
 {
-	int ant_cap;
+	int path_ant_cap;
 
-	ant_cap = turns->path_count * turns->longest_len - turns->total_len;
+	path_ant_cap = turns->path_count * turns->longest_len - turns->total_len;
 
-	if (ants - ant_cap <= 0)
+	if (ants - path_ant_cap <= 0)
 		return(calc_small_ant_amount_turn_count);
-	if ((ants - ant_cap) % turns->path_count)
-		return ((ants - ant_cap) / turns->path_count + 1) ;
-	return ((ants - ant_cap) / turns->path_count);
+	if ((ants - path_ant_cap) % turns->path_count)
+		return ((ants - path_ant_cap) / turns->path_count + 1) ;
+	return ((ants - path_ant_cap) / turns->path_count);
 }
 
 
@@ -66,15 +66,14 @@ int calc_turns(t_path *data, int *paths)
 }
 
 
-int get_winner(t_path *data, int **best, int *curr_path)
+void get_winner(t_path *data, int **best, int *curr_path)
 {
 	if (!*best || calc_turns(data, curr_path) < calc_turns(data, *best))
 	{
 		free(*best);
 		*best = curr_path;
-		return (1);
+		data->path_changed = 1;
 	}
 	free(curr_path);
 	curr_path = NULL;
-	return (0);
 }
