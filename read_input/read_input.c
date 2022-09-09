@@ -6,13 +6,13 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/08 15:29:12 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/09 19:18:30 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "read_input.h"
 
-void get_ants(t_path *data, char *str)
+void parse_ants(t_path *data, char *str)
 {
 	int static ants_saved;
 
@@ -42,27 +42,27 @@ int array_len(char **array)
 
 int	is_valid_room(char **room, int field_count)
 {
-	if (field_count != 3 || !ft_is_int(room[1]) || !ft_is_int(room[2]))
-			return (0);
-	return (1);
+	if (field_count == 3 && ft_is_int(room[1]) && ft_is_int(room[2]))
+			return (1);
+	return (0);
 }
 
-void parse_room(t_path *data, char *str)
+void parse_room(t_path *data, t_table *t, char *room_data)
 {
 	static int	rooms_saved;
 	char 		**fields;
 
-	if (rooms_saved)
+	if (rooms_saved == 1)
 		return ;
-	fields = ft_strsplit(str, ' ');
+	fields = ft_strsplit(room_data, ' ');
 	if (is_valid_room(fields, array_len(fields)))
 		{
-			save_room(data, fields[0], ft_atoi(fields[1]), ft_atoi(fields[2]));
+			save_room(data, t, fields);
 			data->room_count++;
 		}
 	else
 		rooms_saved = 1;
-	free_array(fields);
+	//free_array(fields);
 }
 
 void make_grid(t_path *data)
@@ -91,23 +91,23 @@ int is_valid_link(t_path *data, char **rooms, int field_count)
 
 }
 
-void parse_link(t_path *data, char *str)
+void parse_link(t_path *data, t_table *t, char *str)
 {
-	char **fields;
+	char **link_names;
 
 	if (!data->adj_grid)
 		make_grid(data);
-	fields = ft_strsplit(str, '-');
-	if (!fields)
+	link_names = ft_strsplit(str, '-');
+	if (!link_names)
 		exit(1);
-	if (is_valid_link(fields, array_len(fields)))
-		save_link(data->adj_grid, fields[0], fields[1]);
+	if (is_valid_link(link_names, array_len(link_names)))
+		save_link(data->adj_grid, t ,link_names[0], link_names[1]);
 	else
 	{
 		printf("Error savelink\n");
 		exit(1);
 	}
-	free_array(fields);
+	//free_array(link_names);
 }
 
 int is_cmd_or_comment(t_path *data, char *line)
@@ -135,40 +135,65 @@ int is_cmd_or_comment(t_path *data, char *line)
 	return (1);
 }
 
+void init_hash_table(t_table *t)
+{
+	char *line;
+	int total_lines;
+	
+	line = NULL;
+	total_lines = 0;
+	ft_memset(t, 0, sizeof(t_table));
+	while (get_next_line(STDIN, &line))
+	{
+		free(line);
+		line = NULL;
+		++total_lines;
+	}
+	t->table = (t_hash *)ft_memalloc(sizeof(t_hash) * (total_lines * 3));
+	if (!t->table)
+		exit(1);
+	t->table_size = total_lines * 3;
+}
+
+/*
+void destroy_table(t_table *t)
+{
+	int i;
+
+	i = 0;
+	while (t->table_size > i)
+	{
+		if ((t->table)[i])
+			free(((t->table)[i])->name);
+		free((t->table)[i]);
+	}
+	free(t->table);
+	t->table = NULL
+}
+*/
+
 void read_input(t_path *data)
 {
-	char	**line;
+	t_table	t;
+	char	*line;
 	int		ret;
 
-	*line = NULL;
-	ret = get_next_line(STDIN, line);
+	init_hash_table(&t);	
+	line = NULL;
+	ret = get_next_line(STDIN, &line);
 	while (ret)
 	{
 		if (ret == -1)
 			exit(-1);
-		if (!is_cmd_or_comment(data, *line))
+		if (!is_cmd_or_comment(data, line))
 		{
-			parse_ants(data, *line);
-			parse_room(data, *line);
-			parse_link(data, *line);
+			parse_ants(data, line);
+			parse_room(data, &t, line);
+			parse_link(data, &t, line);
 		}
-		free(*line);
-		*line = NULL;
-		ret = get_next_line(STDIN, line);
+		free(line);
+		line = NULL;
+		ret = get_next_line(STDIN, &line);
 	}
+	//destroy_table();
 }
-
-
-
-void save_room(t_hash **table, char *name, int y, int x)
-{
-
-
-
-}
-
-int name_to_num(t_hash **table, char *name);
-int *name_to_coord(t_hash **table, char *name);
-char *get_name(char **list, int node_num);
-
-
