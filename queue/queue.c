@@ -6,13 +6,13 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 12:31:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/10 23:44:39 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/11 00:03:43 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "queue.h"
 
-t_queue *q_init(int size)
+void q_init(int size)
 {
 	t_queue *q_list;
 
@@ -30,18 +30,18 @@ void q_destroy()
 	q_list = q_get();
 	if (q_list->queue)
 	{
-		free(q->queue);
+		free(q_list->queue);
 		q_list->queue = NULL;
 	}
 }
 
 void	q_enqueue(int content)
 {
-	t_queue q;
+	t_queue *q;
 
-	&q = q_get();
-	q.queue[q.size] = content;
-	++q.size;
+	q = q_get();
+	q->queue[q->size] = content;
+	++q->size;
 }
 
 void	q_dequeue(void)
@@ -51,7 +51,7 @@ void	q_dequeue(void)
 	q = q_get();
 	if (q->size)
 	{
-		ft_memmove(q->queue, (q->queue)[1], q->size - 1);
+		ft_memmove(q->queue, (q->queue) + 1, q->size - 1);
 		--q->size;
 	}
 }
@@ -76,6 +76,7 @@ int *q_get_list()
 			exit(1);
 	}
 	ft_memcpy(list, q->queue, sizeof(int) * q->size);
+	return (list);
 }
 
 int q_peek(void)
