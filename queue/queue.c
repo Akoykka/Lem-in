@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 12:31:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/11 00:03:43 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/11 00:14:43 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ t_queue *q_get(void)
 	{
 		++q_list;
 		++i;
-		if(i < 1024)
+		if(i > 1024)
 		{
 			ft_putstr("queues_full\n");
 			exit(1);
