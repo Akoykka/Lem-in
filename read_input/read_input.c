@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/09 19:18:30 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/10 11:20:25 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,11 @@ void make_grid(t_path *data)
 	}
 }
 
-int is_valid_link(t_path *data, char **rooms, int field_count)
+int is_valid_link(int field_count)
 {
 	if (field_count != 2)
 		return (0);
-	if (data->hash_table[hash(rooms[0])])
-
-
+	return(1);
 }
 
 void parse_link(t_path *data, t_table *t, char *str)
@@ -100,8 +98,8 @@ void parse_link(t_path *data, t_table *t, char *str)
 	link_names = ft_strsplit(str, '-');
 	if (!link_names)
 		exit(1);
-	if (is_valid_link(link_names, array_len(link_names)))
-		save_link(data->adj_grid, t ,link_names[0], link_names[1]);
+	if (is_valid_link(array_len(link_names)))
+		save_link(data, t ,link_names[0], link_names[1]);
 	else
 	{
 		printf("Error savelink\n");
@@ -139,7 +137,7 @@ void init_hash_table(t_table *t)
 {
 	char *line;
 	int total_lines;
-	
+
 	line = NULL;
 	total_lines = 0;
 	ft_memset(t, 0, sizeof(t_table));
@@ -155,30 +153,13 @@ void init_hash_table(t_table *t)
 	t->table_size = total_lines * 3;
 }
 
-/*
-void destroy_table(t_table *t)
-{
-	int i;
-
-	i = 0;
-	while (t->table_size > i)
-	{
-		if ((t->table)[i])
-			free(((t->table)[i])->name);
-		free((t->table)[i]);
-	}
-	free(t->table);
-	t->table = NULL
-}
-*/
-
 void read_input(t_path *data)
 {
 	t_table	t;
 	char	*line;
 	int		ret;
 
-	init_hash_table(&t);	
+	init_hash_table(&t);
 	line = NULL;
 	ret = get_next_line(STDIN, &line);
 	while (ret)

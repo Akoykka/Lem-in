@@ -6,7 +6,7 @@
 #    By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/23 17:07:39 by akoykka           #+#    #+#              #
-#    Updated: 2022/06/03 09:58:05 by akoykka          ###   ########.fr        #
+#    Updated: 2022/09/10 10:22:43 by akoykka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,55 +30,38 @@ SRCS = ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c \
 	ft_strsplit.c ft_strstr.c \
 	ft_strsub.c ft_strtrim.c ft_tolower.c ft_toupper.c \
 	ft_strlcat.c ft_strndup.c\
-	ft_lstadd.c ft_lstnew.c ft_lstiter.c ft_lstmap.c \
-	ft_lstdelone.c ft_lstdel.c\
-	ft_memrcpy.c ft_findtail.c ft_lstcount.c\
-	get_next_line.c
-	
+	ft_lst_add.c ft_lst_new.c ft_lst_iter.c ft_lst_map.c \
+	ft_lst_del_one.c ft_lst_del.c ft_lst_push_top.c ft_lst_move_to_top.c\
+	ft_memrcpy.c ft_lst_count.c ft_lst_get_tail.c\
+	ft_lst_reverse.c get_next_line.c ft_invert_int_array.c\
+	ft_mnode_insert.c ft_mnode_new.c ft_mnode_destroy.c
+	ft_is_int.c
 
-OBJECTS = ft_atoi.o ft_bzero.o ft_isalnum.o ft_isalpha.o\
-	ft_isascii.o ft_isdigit.o \
-	ft_isprint.o ft_itoa.o ft_memalloc.o ft_memccpy.o \
-	ft_memchr.o ft_memcmp.o \
-	ft_memcpy.o ft_memdel.o ft_memmove.o ft_memset.o \
-	ft_putchar_fd.o ft_putchar.o \
-	ft_putendl_fd.o ft_putendl.o ft_putnbr.o \
-	ft_putnbr_fd.o ft_putstr_fd.o \
-	ft_putstr.o ft_strcat.o ft_strchr.o ft_strclr.o \
-	ft_strcmp.o ft_strcpy.o \
-	ft_strdel.o ft_strdup.o ft_strequ.o ft_striter.o \
-	ft_striteri.o ft_strjoin.o \
-	ft_strlen.o ft_strmap.o ft_strmapi.o ft_strncat.o \
-	ft_strncmp.o ft_strncpy.o \
-	ft_strnequ.o ft_strnew.o ft_strnstr.o ft_strrchr.o \
-	ft_strsplit.o ft_strstr.o \
-	ft_strsub.o ft_strtrim.o ft_tolower.o ft_toupper.o \
-	ft_strlcat.o ft_strndup.o\
-	ft_lstadd.o ft_lstnew.o ft_lstiter.o ft_lstmap.o \
-	ft_lstdelone.o ft_lstdel.o\
-	ft_memrcpy.o ft_findtail.o ft_lstcount.o\
-	get_next_line.o
+
+OBJECTS = $(SRCS:%.c=%.o)
+
+FLAGS = -Wall -Wextra -Werror
+FLAGS += -g
 
 INCLUDES = includes/
 
-
 all: $(NAME)
 
-$(NAME): 
-	gcc -c -Wall -Wextra -Werror $(SRCS) -I $(INCLUDES)
-	ar rc $(NAME) $(OBJECTS)
-	ranlib $(NAME)
-	make -C ft_printf/
+$(NAME): $(OBJECTS)
+	@ar rc $(NAME) $(OBJECTS)
+	@ranlib $(NAME)
 
-clean: 
-	rm -f $(OBJECTS)
-	make clean -C ft_printf/
+$(OBJECTS): %.o:%.c Makefile
+	@gcc $(FLAGS) -c $< -o $@ -I $(INCLUDES)
+
+clean:
+	@rm -f $(OBJECTS)
 
 fclean: clean
 	rm -f $(NAME)
-	make fclean -C ft_printf/
+
 
 re: fclean all
-	
+
 norm:
 	norminette $(SRCS)

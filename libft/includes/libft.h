@@ -17,11 +17,20 @@
 # include <unistd.h>
 
 typedef struct s_list
-{	
+{
 	void			*content;
 	size_t			content_size;
 	struct s_list	*next;
 }					t_list;
+
+typedef struct s_mnode
+{
+	void 	*content;
+	size_t	content_size;
+	struct	s_mnode **next;
+	size_t	next_size;
+
+}			 t_mnode;
 
 int		ft_atoi(const char *str);
 char	*ft_strcpy(char *dst, const char *src);
@@ -75,14 +84,28 @@ void	ft_putnbr_fd(int n, int fd);
 void	ft_bzero(void *s, size_t n);
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 char	**ft_strsplit(char const *s, char c);
-t_list	*ft_lstnew(void const *content, size_t content_size);
-void	ft_lstadd(t_list **alst, t_list *new);
-void	ft_lstiter(t_list *lst, void (*f)(t_list *elem));
-t_list	*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
-void	ft_lstdelone(t_list **alst, void (*del)(void*, size_t));
-void	ft_lstdel(t_list **alst, void (*del)(void *, size_t));
+
+
+t_list	*ft_lst_new(void const *content, size_t content_size);
+void	ft_lst_add(t_list **alst, t_list *new);
+void	ft_lst_iter(t_list *lst, void (*f)(t_list *elem));
+t_list	*ft_lst_map(t_list *lst, t_list *(*f)(t_list *elem));
+void	ft_lst_del_one(t_list **head, t_list *target, void (*del)(void*, size_t));
+void	ft_lst_del(t_list **alst, void (*del)(void *, size_t));
+size_t	ft_lst_count(t_list *start);
+void 	ft_lst_move_to_top(t_list **head, t_list *target);
+void 	ft_lst_push_top(t_list **src, t_list **dest);
+t_list	*ft_lst_get_tail(t_list *head);
+void 	ft_lst_move_one_to_tail(t_list **head, t_list *target);
+void 	ft_lst_reverse(t_list **head);
+
 void	*ft_memrcpy(void *dst, const void *src, size_t n);
 char	*ft_strndup(const char *s1, size_t n);
 t_list	*ft_findtail(t_list *start);
-size_t	ft_lstcount(t_list *start);
+
+t_mnode	*ft_mnode_new(void const *content, size_t content_size);
+void	ft_mnode_destroy(t_mnode **root);
+void	ft_mnode_insert(t_mnode *dst, t_mnode *new_mnode);
+
+int		*ft_invert_int_array(int *array, size_t size);
 #endif

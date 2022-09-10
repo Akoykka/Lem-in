@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 12:03:31 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/09 19:18:32 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/10 10:52:21 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 	every cycle of hash function
 	Bitshift is faster on cpu ((hash << 5) + hash)
-*/
+
 int	is_only_numbers(char *str)
 {
 	if ((*str == '-' && ft_strlen(str) > 1)
@@ -34,7 +34,7 @@ int	is_smaller_than_max(char *str)
 {
 	if (*str == '+')
 		++str;
-	if (ft_strlen(str) > 10 
+	if (ft_strlen(str) > 10
 		|| (ft_strlen(str) == 10 && ft_strcmp(str, "2147483647") > 0))
 			return (0);
 	return (1);
@@ -44,7 +44,7 @@ int	is_bigger_than_min(char *str)
 {
 	if (*str == '-')
 	{
-		if (ft_strlen(str) > 11 
+		if (ft_strlen(str) > 11
 			|| (ft_strlen(str) == 11 && ft_strcmp(str, "-2147483648") > 0))
 				return (0);
 	}
@@ -59,8 +59,7 @@ int ft_is_int(char *str)
 		return (1);
 	return (0);
 }
-
-
+*/
 
 unsigned long hash(char *str)
 {
@@ -78,24 +77,21 @@ unsigned long hash(char *str)
 
 int hash_add(t_table *t, unsigned long digest, char **room_data, int room_number)
 {
-	t_hash *new;
+	t_hash *hashtable;
 
-	while ((t->table)[digest])
+	hashtable = t->table;
+	while (hashtable[digest].name)
 	{
 		++digest;
 		if (digest == t->table_size)
 			digest = 0;
 	}
-	new = (t_hash *)ft_memalloc(sizeof(t_hash));
-	if (!new)
-		return (0);
-	new->name = ft_strdup(room_data[0]);
-	if (!new->name)
-		return (0);
-	new->number = room_number;
-	(new->xy)[0] = ft_atoi(room_data[1]);
-	(new->xy)[1] = ft_atoi(room_data[2]);
-	(t->table)[digest] = *new;
+	hashtable[digest].name = ft_strdup(room_data[0]);
+	if (hashtable[digest].name)
+		return(0);
+	hashtable[digest].number = room_number;
+	hashtable[digest].xy[0] = ft_atoi(room_data[1]);
+	hashtable[digest].xy[1] = ft_atoi(room_data[2]);
 	return (1);
 }
 
@@ -122,14 +118,14 @@ int get_room_number(t_table *t, char *room_name)
 
 	temp = t->table;
 	digest = hash(room_name) % t->table_size;
-	
-	while (table[digest] && ft_strcmp((table[digest]).name, room_name))
+
+	while (ft_strcmp(temp[digest].name, room_name))
 	{
 		++digest;
 		if (digest == t->table_size)
 			digest = 0;
 	}
-	if (!table[digest])
+	if (temp[digest].name)
 	{
 			printf("ERROR NO SUCH ROOM get_room_number\n");
 			exit(1);
