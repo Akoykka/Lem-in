@@ -6,58 +6,85 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 12:31:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/11 00:14:43 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/12 22:02:24 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "queue.h"
 
-void q_init(int size)
+t_qdata *q_new(unsigned int max_size)
 {
-	t_queue *q_list;
+	t_qdata *new;
 
-	q_list = q_get();
-	if (q_list->queue)
-		++q_list;
-	q_list->queue = (int *)ft_memalloc(sizeof(int) * size);
-	q_list->size = size;
+	new = (t_qdata *)ft_memalloc(sizeof(t_qdata));
+	new->queue = ft_memalloc(sizeof(int) * max_size + 1);
+	new->size = 0;
+	
+	return (new);
 }
 
-void q_destroy()
+void q_init()
 {
-	t_queue *q_list;
+	t_queue_storage *temp;
 
-	q_list = q_get();
-	if (q_list->queue)
+	temp = q_storage();
+	temp->queue_list = (t_qdata **)ft_memalloc(sizeof(t_qdata *) * 1024);
+	if(!temp->queue_list)
+		exit(1);
+}
+
+void q_add_queue(unsigned int size)
+{
+	t_queue_storage *temp;
+
+	temp = q_storage();
+	if (temp->list_size)
+		++temp->current_list;
+	temp->queue_list[temp->current_list] = q_new(size);
+	if (!temp->queue_list[temp->current_list])
+		exit(1);
+	++temp->list_size;
+}
+
+void q_delete_queue()
+{
+	t_queue_storage *temp;
+
+	temp = q_storage();
+	if (temp->list_size)
 	{
-		free(q_list->queue);
-		q_list->queue = NULL;
+		free((temp->queue_list)[temp->current_list]);
+		(temp->queue_list)[temp->current_list] = NULL;
+		--temp->list_size;
+		if(temp->current_list)
+			--temp->current_list;
 	}
 }
 
 void	q_enqueue(int content)
 {
-	t_queue *q;
+	t_qdata *q;
 
 	q = q_get();
-	q->queue[q->size] = content;
-	++q->size;
+	(q->queue)[q->size] = content;
+	++(q->size);
 }
 
 void	q_dequeue(void)
 {
-	t_queue *q;
+	t_qdata *q;
 
 	q = q_get();
 	if (q->size)
 	{
-		ft_memmove(q->queue, (q->queue) + 1, q->size - 1);
+		ft_memmove(q->queue, (q->queue + 1), sizeof(int) * q->size);
 		--q->size;
 	}
 }
+
 int q_get_len()
 {
-	t_queue *q;
+	t_qdata *q;
 
 	q = q_get();
 	return (q->size);
@@ -65,23 +92,24 @@ int q_get_len()
 
 int *q_get_list()
 {
-	t_queue *q;
+	t_qdata *q;
 	int *list;
 
+	list = NULL;
 	q = q_get();
 	if (q->size)
 	{
 		list = (int *)ft_memalloc(sizeof(int) * q->size);
 		if (!list)
 			exit(1);
+		ft_memcpy(list, q->queue, sizeof(int) * q->size);
 	}
-	ft_memcpy(list, q->queue, sizeof(int) * q->size);
 	return (list);
 }
 
 int q_peek(void)
 {
-	t_queue *q;
+	t_qdata *q;
 
 	q = q_get();
 	if (!q->size)
@@ -91,9 +119,10 @@ int q_peek(void)
 	}
 	return (*(q->queue));
 }
+
 int q_is_empty()
 {
-	t_queue *q;
+	t_qdata *q;
 
 	q = q_get();
 	if (!q->size)
@@ -101,28 +130,37 @@ int q_is_empty()
 	return(0);
 }
 
-t_queue *q_get(void)
+void q_pop(int content)
 {
-	t_queue *q_list;
-	size_t i;
+	t_qdata			*q;
+	unsigned int	i;
 
-	i = 1;
-	q_list = q_static();
-	while(q_list->queue)
+	i = 0;
+	q = q_get();
+	while((q->queue)[i] != content)
 	{
-		++q_list;
 		++i;
-		if(i > 1024)
+		if (i == q->size)
 		{
-			ft_putstr("queues_full\n");
+			ft_putstr("content not found (q_pop");
 			exit(1);
 		}
 	}
-	return (&q_list[i - 1]);
+	ft_memmove(&q->queue[i], &q->queue[i+1], sizeof(int) * (q->size - i));
+	--q->size;
 }
 
-t_queue *q_static()
+
+t_qdata *q_get(void)
 {
-	static t_queue	queue_list[1024];
-	return(queue_list);
+	t_queue_storage *temp;
+	
+	temp = q_storage();
+	return((temp->queue_list)[temp->current_list]);
+}
+
+t_queue_storage *q_storage(void)
+{
+	static t_queue_storage	temp;
+	return(&temp);
 }
