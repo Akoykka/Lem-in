@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 17:11:10 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/12 18:43:51 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/13 17:22:46 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,32 @@ unsigned long hash_djb2(char *key)
 {
 	unsigned long hash = 5381;
 	int c;
+	int i;
 
-	while (*key)
+	i = 0;
+	while (key[i])
 	{
-		c = *key;
+		c = key[i];
 		hash = hash * 33 + c;
-		++*key;
+		++i;
 	}
 	return (hash);
+}
+
+int hash_get_number(char *name)
+{
+	t_hash *temp;
+
+	temp = hash_get(name);
+	return (temp->number);
+}
+
+int *hash_get_coords(char *name)
+{
+	t_hash *temp;
+
+	temp = hash_get(name);
+	return (temp->xy);
 }
 
 void hash_init(unsigned int table_size)
@@ -41,19 +59,21 @@ void hash_destroy(void)
 {
 	t_table *temp;
 	unsigned long i;
-
+	t_hash **hashtable;
 	i = 0;
 	temp = hash_storage();
+	hashtable = temp->table;
 	while (temp->table_size > i)
 	{
-		free((temp->table)[i]->name);
-		(temp->table)[i]->name = NULL;
-		free((temp->table)[i]);
-		(temp->table)[i] = NULL;
+		if (hashtable[i])
+		{
+			free(hashtable[i]->name);
+			hashtable[i]->name = NULL;
+			free(hashtable[i]);
+			hashtable[i] = NULL;
+		}
 		++i;
 	}
-	free(temp);
-	temp = NULL;
 }
 
 t_hash *hash_get(char *name)
@@ -93,7 +113,6 @@ t_hash *hash_new(char *name, int x, int y, int number)
 	new->number = number;
 
 	return (new);
-
 }
 
 void hash_add(char *name, int x, int y, int number)
@@ -110,7 +129,7 @@ void hash_add(char *name, int x, int y, int number)
 	{
 		++digest;
 		if (temp->table_size == digest)
-		digest = 0;
+			digest = 0;
 	}
 	hash_table[digest] = hash_new(name, x, y, number);
 }	
@@ -118,22 +137,6 @@ void hash_add(char *name, int x, int y, int number)
 
 t_table *hash_storage(void)
 {
-	static t_table *storage;
-	return(storage);
-}
-
-int hash_get_number(char *name)
-{
-	t_hash *temp;
-
-	temp = hash_get(name);
-	return (temp->number);
-}
-
-int *hash_get_coords(char *name)
-{
-	t_hash *temp;
-
-	temp = hash_get(name);
-	return (temp->xy);
+	static t_table storage;
+	return (&storage);
 }

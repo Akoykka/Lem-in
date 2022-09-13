@@ -6,11 +6,10 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/09 17:19:20 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/13 19:17:40 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/includes/libft.h"
 #include "lem_in.h"
 
 int is_adjacent(t_path *data, int room, int room2)
@@ -167,58 +166,48 @@ void bfs(t_path *data, char *paths, int root_node)
 {
 	t_queue q;
 
-	q.size = 1;
-	q.queue = (int *)ft_memalloc(sizeof(int) * (data->room_count + 1));
-	q.queue[0] = root_node;
-	while(q.size)
+	q_init(data->room_count);
+	q_add(root_node);
+	while(!q_is_empty())
 	{
-		queue_add_adjacent(data, paths, &q);
-		queue_handle_reroutes(data, paths, &q);
-		if (is_end_reached(&q))/// i dunno
+		queue_add_adjacent(data, paths);
+		queue_handle_reroutes(data, paths;
+		if (is_end_reached(&q))/// queue_get queue len and then check
 		{
 			clean_bfs_residue(data, paths);
 			get_winner(data, *(data->best_path), paths);
 		}
-		queue_remove_head(&q);
+		q_dequeue();
 	}
-	free(q.queue);
+	q_delete_queue();
 }
 
-// if number has previous node data (0 or higher)
+queue_start_neighbours(t_path *data)
 
 void get_paths(t_path *data)
 {
-	t_queue	q;
-
-	q.queue = (int *)ft_memalloc((sizeof(int) * data->room_count + 1));
-	if (!q.queue || !paths)
-		exit (1);
-	queue_start_neighbours(data, &q);
-	while (q.size)
+	q_init(data->room_count);
+	queue_start_neighbours(data);
+	while (!q_is_empty())
 	{
 			if (data->path_changed)
 			{
 				data->path_changed = 0;
-				q.size = 0;
-				queue_start_neighbours(data, &q);
-				if(!q.size)
-				{
-					free(q.queue);
-					return; // here maybe free
-				}
+				queue_start_neighbours(data);
 			}
-			bfs(data, dup_paths(data, data->best_path), q.queue);
-			queue_remove_head(&q);
+			bfs(data, dup_paths(data, data->best_path), q_peek());
+			q_dequeue();
 	}
-	free(q.queue);
+	q_delete_queue();
 }
 
 int main(void)
 {
 	t_path data;
 
+	ft_memset(&data, 0, sizeof(data));
 	read_input(&data);
-	//get_paths(&data);
+	get_paths(&data);
 	//march_ants();
-	//exit (0);
+	exit (0);
 }

@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 12:31:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/12 22:02:24 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/13 17:28:28 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,6 @@ t_qdata *q_get(void)
 
 t_queue_storage *q_storage(void)
 {
-	static t_queue_storage	temp;
-	return(&temp);
+	static t_queue_storage	storage;
+	return(&storage);
 }

@@ -1,23 +1,23 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    makefile                                           :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/08 12:28:36 by akoykka           #+#    #+#              #
-#    Updated: 2022/09/10 11:29:02 by akoykka          ###   ########.fr        #
+#    Updated: 2022/09/13 18:46:45 by akoykka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 CFLAGS = -g -c -Wall -Wextra -Werror
-SOURCES=hash.c read_input.c
+SOURCES=utils.c read_input.c
 OBJECTS=$(SOURCES:%.c=%.o)
 LIBFT = ../libft/libft.a
 INCLUDES = ../libft/includes #-L../libft/ -lft
 
-all: $(OBJECTS) $(LIBFT)
+all: $(OBJECTS) $(LIBFT) $(HASH)
 
 $(OBJECTS): %.o:%.c Makefile
 	$(CC) $(CFLAGS) $< -I $(INCLUDES)
@@ -25,6 +25,9 @@ $(OBJECTS): %.o:%.c Makefile
 $(LIBFT):
 	make -C ../libft
 
+$(HASH):
+	make -C ../hash
+	
 clean:
 	rm -f $(OBJECTS)
 

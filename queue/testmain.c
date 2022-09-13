@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 20:12:06 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/12 22:02:26 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/13 17:28:39 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int main(void)
 	q_add_queue(30);
 	q_enqueue(13);
 	q_enqueue(2);
-	printf("%i\n", q_peek());
 	q_enqueue(3);
 	print_queue();
 	q_enqueue(5);
@@ -43,7 +42,6 @@ int main(void)
 	q_add_queue(30);
 	q_enqueue(19);
 	q_enqueue(1);
-	printf("%i\n", q_peek());
 	q_enqueue(1);
 	print_queue();
 	q_delete_queue();
@@ -55,9 +53,10 @@ int main(void)
 	q_enqueue(666);
 	q_enqueue(3);
 	q_pop(666);
-	printf("%i\n", q_peek());
-
-
 	print_queue();
+	printf("\nQPEEK IS = %i\n", q_peek());
+
+
+	
 	//printf("is_empty:%i\n", q_is_empty());
 }

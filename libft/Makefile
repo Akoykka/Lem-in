@@ -6,7 +6,7 @@
 #    By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/23 17:07:39 by akoykka           #+#    #+#              #
-#    Updated: 2022/09/10 10:22:43 by akoykka          ###   ########.fr        #
+#    Updated: 2022/09/13 18:45:24 by akoykka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,8 +34,8 @@ SRCS = ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c \
 	ft_lst_del_one.c ft_lst_del.c ft_lst_push_top.c ft_lst_move_to_top.c\
 	ft_memrcpy.c ft_lst_count.c ft_lst_get_tail.c\
 	ft_lst_reverse.c get_next_line.c ft_invert_int_array.c\
-	ft_mnode_insert.c ft_mnode_new.c ft_mnode_destroy.c
-	ft_is_int.c
+	ft_mnode_insert.c ft_mnode_new.c ft_mnode_destroy.c \
+	ft_isint.c ft_array_len.c ft_free_array.c
 
 
 OBJECTS = $(SRCS:%.c=%.o)

@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 11:40:59 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/12 21:23:30 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/13 17:28:38 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ typedef struct	s_queue_storage
 // INIT
 void	q_init();
 void	q_add_queue(unsigned int max_size);
-void	q_delete_queue();
-void	q_destroy();
+void	q_delete_queue(void);
+void	q_destroy(void);
 
 // STORAGE
-t_queue_storage *q_storage();
+t_queue_storage *q_storage(void);
 t_qdata *q_get(void);
 
 // FUNCTIONS
@@ -43,8 +43,8 @@ void	q_enqueue(int content);
 void	q_dequeue(void);
 int		q_peek(void);
 void	q_pop(int content);
-int 	q_is_empty();
-int		*q_get_list();
-int 	q_get_len();
+int 	q_is_empty(void);
+int		*q_get_list(void);
+int 	q_get_len(void);
 
 #endif

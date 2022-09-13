@@ -1,22 +1,16 @@
-
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   queue.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/13 18:57:47 by akoykka           #+#    #+#             */
+/*   Updated: 2022/09/13 19:17:42 by akoykka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "libft/includes/libft.h"
-#include "queue.h"
-
-void queue_remove_head(t_queue *q)
-{
-	if (!q->size)
-		return ;
-	ft_memmove(&(q->queue[1]), q->queue, sizeof(int) * q->size);
-	q->size--;
-}
-
-void queue_add_room(t_queue *q, int room_number)
-{
-	q->queue[q->size] = room_number;
-	++q->size;
-}
 
 void queue_add_adjacent(t_path *data, int *paths, t_queue *q)
 {
@@ -52,7 +46,6 @@ void queue_remove_collision(int collision, t_queue *q)
 	ft_memmove((q->queue)[i], (q->queue)[i + 1], sizeof(int) * (q->size - i));
 	--q->size;
 }
-
 
 void queue_empty_start_neighbours(t_path *data, t_queue *q)
 {

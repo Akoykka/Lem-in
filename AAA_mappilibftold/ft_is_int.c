@@ -6,11 +6,11 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:50:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/08 13:19:04 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/13 18:46:27 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem_in.h"
+#include ""
 
 static int	is_only_numbers(char *str)
 {

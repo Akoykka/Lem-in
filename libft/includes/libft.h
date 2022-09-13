@@ -108,4 +108,7 @@ void	ft_mnode_destroy(t_mnode **root);
 void	ft_mnode_insert(t_mnode *dst, t_mnode *new_mnode);
 
 int		*ft_invert_int_array(int *array, size_t size);
+int		ft_isint(char *str);
+int		ft_array_len(char **array);
+void 	ft_free_array(char **array);
 #endif
