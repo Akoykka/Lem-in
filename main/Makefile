@@ -6,21 +6,21 @@
 #    By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/10 11:23:37 by akoykka           #+#    #+#              #
-#    Updated: 2022/09/10 11:34:31 by akoykka          ###   ########.fr        #
+#    Updated: 2022/09/14 19:53:06 by akoykka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=lem_in
 CC=gcc
 CFLAGS= -g -c -Wall -Wextra -Werror
-SOURCES= main.c
+SOURCES= lem_in.c read_input.c read_utils.c bfs.c
 OBJECTS=$(SOURCES:%.c=%.o)
 LIBFT = ../libft/libft.a
 INCLUDES = ../libft/includes
 
 all: $(OBJECTS) $(LIBFT)
 
-$(NAME)
+$(NAME):
 	$(CC) $(CFLAGS) $(OBJECTS) -I $(INCLUDES)
 
 $(OBJECTS): %.o:%.c Makefile

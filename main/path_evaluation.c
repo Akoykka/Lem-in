@@ -6,13 +6,11 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 15:20:12 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/07 15:33:47 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/14 19:52:32 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/includes/libft.h"
 #include "lem_in.h"
-
 
 int pathlen(int *paths, int node)
 {
@@ -52,7 +50,7 @@ int calc_turns(t_path *data, int *paths)
 	ft_memset(&turn_count, 0, sizeof(t_turns));
 	while(data->room_count > i)
 	{
-		if (ADJ_GRID[END][i] && paths[i])
+		if (ADJ_GRID[data->end][i] && paths[i])
 		{
 			path_len = pathlen(paths, i);
 			if (path_len > turn_count.longest_len)

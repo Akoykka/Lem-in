@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/13 19:17:44 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/14 20:01:31 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void parse_ants(t_path *data, char *str)
 
 	if (ants_saved == 1)
 		return;
-	if (ft_is_int(str))
+	if (ft_isint(str))
 	{
 		data->ant_count = ft_atoi(str);
 		ants_saved = 1;
@@ -38,9 +38,9 @@ void parse_room(t_path *data, char *line)
 	if (all_rooms_saved)
 		return ;
 	info = ft_strsplit(line, ' ');
-	if (array_len(info) == 3 && ft_is_int(info[1]) && ft_is_int(info[2]))
+	if (ft_array_len(info) == 3 && ft_isint(info[1]) && ft_isint(info[2]))
 	{
-		hash_add(info[0], info[1], info[2], data->room_count);
+		hash_add(info[0], ft_atoi(info[1]), ft_atoi(info[2]), data->room_count);
 		(data->room_list)[data->room_count] = ft_strdup(info[0]);
 		data->room_count++;
 	}
@@ -60,7 +60,7 @@ void parse_link(t_path *data, char *str)
 	link = ft_strsplit(str, '-');
 	if (!link)
 		exit(1);
-	if (array_len(link) == 2)
+	if (ft_array_len(link) == 2)
 	{
 		room_num = hash_get_number(link[0]);
 		room_num2 = hash_get_number(link[1]);
@@ -99,11 +99,10 @@ void read_input(t_path *data)
 {
 	char	*line;
 	int		ret;
-	unsigned int total_input_lines;
 
 	allocate_memory(data);
 	line = NULL;
-	ret = get_next_line(STDIN, &line);
+	ret = get_next_line(0, &line);
 	while (ret)
 	{
 		if (ret == -1)
@@ -116,7 +115,7 @@ void read_input(t_path *data)
 		}
 		free(line);
 		line = NULL;
-		ret = get_next_line(STDIN, &line);
+		ret = get_next_line(0, &line);
 	}
 	hash_destroy();
 }

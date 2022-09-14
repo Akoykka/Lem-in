@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   read_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 18:19:27 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/13 18:35:08 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/14 20:01:48 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "read_input.h"
+#include "lem_in.h"
 
 unsigned int count_input_lines(void)
 {
@@ -19,7 +19,7 @@ unsigned int count_input_lines(void)
 
 	line = NULL;
 	total_lines = 0;
-	while (get_next_line(STDIN, &line))
+	while (get_next_line(0, &line))
 	{
 		free(line);
 		line = NULL;
