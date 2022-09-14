@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:16:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/14 21:51:05 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/14 21:51:57 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,12 @@ int is_neighbour(t_path *data, int room, int room2)
 int is_new_path(t_path *data, int *paths, int *used_paths, int start)
 {
 	if(paths[start])
-
+	/// @brief //////// HERHERHEHRHERHEHREHRH 
+	/// @param data 
+	/// @param paths 
+	/// @param used_paths 
+	/// @param start 
+	/// @return 
 	return (1);
 }
 
