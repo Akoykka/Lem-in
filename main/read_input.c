@@ -6,37 +6,30 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/14 20:01:31 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/16 19:24:44 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void parse_ants(t_path *data, char *str)
+int parse_ants(t_path *data, char *str)
 {
-	int static ants_saved;
-
-	if (ants_saved == 1)
-		return;
 	if (ft_isint(str))
 	{
 		data->ant_count = ft_atoi(str);
-		ants_saved = 1;
 	}
 	else
 	{
 		printf("ERROR ANTS");
 		exit (1);
 	}
+	return (1);
 }
 
-void parse_room(t_path *data, char *line)
+int parse_room(t_path *data, char *line)
 {
-	static int	all_rooms_saved;
 	char 		**info;
 
-	if (all_rooms_saved)
-		return ;
 	info = ft_strsplit(line, ' ');
 	if (ft_array_len(info) == 3 && ft_isint(info[1]) && ft_isint(info[2]))
 	{
@@ -45,8 +38,9 @@ void parse_room(t_path *data, char *line)
 		data->room_count++;
 	}
 	else
-		all_rooms_saved = 1;
+		return(2);
 	ft_free_array(info);
+	return(1);
 }
 
 void parse_link(t_path *data, char *str)
@@ -88,18 +82,21 @@ int is_cmd_or_comment(t_path *data, char *line)
 				data->end = data->room_count;
 				end_found += 1;
 		}
+		return(1);
 	}
 	if (line[0] == 'L' ||( line[0] == '#' && line[1] == '#')
 		|| start_found == 2 || end_found == 2)
 		exit(1);
-	return (1);
+	return (0);
 }
 
 void read_input(t_path *data)
 {
 	char	*line;
 	int		ret;
+	int		stage;
 
+	stage = 0;
 	allocate_memory(data);
 	line = NULL;
 	ret = get_next_line(0, &line);
@@ -109,9 +106,12 @@ void read_input(t_path *data)
 			exit(-1);
 		if (!is_cmd_or_comment(data, line))
 		{
-			parse_ants(data, line);
-			parse_room(data, line);
-			parse_link(data, line);
+			if(stage == 2)
+				parse_link(data, line);
+			if(stage == 1)
+				stage = parse_room(data, line);
+			if(stage == 0)
+				stage = parse_ants(data, line);
 		}
 		free(line);
 		line = NULL;

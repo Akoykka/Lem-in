@@ -6,18 +6,18 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 15:20:12 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/14 19:52:32 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/16 17:38:59 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-int pathlen(int *paths, int node)
+int pathlen(int *paths, int node, int start)
 {
 	int len;
 
 	len = 0;
-	while (node != START)
+	while (node != start)
 	{
 		node = paths[node];
 		++len;
@@ -33,7 +33,7 @@ int get_turn_count(int ants, t_turns *turns)
 	path_ant_cap = turns->path_count * turns->longest_len - turns->total_len;
 
 	if (ants - path_ant_cap <= 0)
-		return(calc_small_ant_amount_turn_count);
+		return(2147483647);
 	if ((ants - path_ant_cap) % turns->path_count)
 		return ((ants - path_ant_cap) / turns->path_count + 1) ;
 	return ((ants - path_ant_cap) / turns->path_count);
@@ -52,7 +52,7 @@ int calc_turns(t_path *data, int *paths)
 	{
 		if (ADJ_GRID[data->end][i] && paths[i])
 		{
-			path_len = pathlen(paths, i);
+			path_len = pathlen(paths, i, data->start);
 			if (path_len > turn_count.longest_len)
 				turn_count.longest_len = path_len;
 			turn_count.total_len += path_len;

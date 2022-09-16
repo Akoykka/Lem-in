@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/14 20:07:32 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/16 20:22:52 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ int *dup_path(int *path, int size)
 
 	i = 0;
 	new = (int *)ft_memalloc(sizeof(int) * size);
+	if(!new)
+		exit(1);
+	if(!path)
+		return(new);
 	while (size > i)
 	{
 		if (path[i] < 0)
@@ -52,7 +56,7 @@ int *dup_path(int *path, int size)
 
 void get_paths(t_path *data)
 {
-	q_init(data->room_count);
+	q_add_queue(data->room_count);
 	q_unused_root_nodes(data);
 	while (!q_is_empty())
 	{
@@ -73,6 +77,7 @@ int main(void)
 {
 	t_path data;
 
+	q_init();
 	ft_memset(&data, 0, sizeof(data));
 	read_input(&data);
 	get_paths(&data);

@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:16:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/14 21:51:57 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/16 20:22:54 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,12 @@ void q_add_adjacent(t_path *data, int *paths)
 		room++;
 	}
 }
-
-int q_get_next_collision()
+int *q_print_queue()
 {
 	int *queue;
 	int size;
 	int i;
+	int collision;
 
 	i = 0;
 	queue = q_get_list();
@@ -68,9 +68,34 @@ int q_get_next_collision()
 	{
 		if (queue[i] < 0)
 		{
+			collision = queue[i] * -1;
 			free(queue);
 			queue = NULL;
-			return queue[i];
+			return (collision);
+		}
+		++i;
+	}
+}
+
+int q_get_next_collision()
+{
+	int *queue;
+	int size;
+	int i;
+	int collision;
+
+	i = 0;
+	queue = q_get_list();
+	size = q_get_len();
+
+	while(size > i)
+	{
+		if (queue[i] < 0)
+		{
+			collision = queue[i] * -1;
+			free(queue);
+			queue = NULL;
+			return (collision);
 		}
 		++i;
 	}
@@ -84,7 +109,6 @@ int backtrack_collided_path(t_path *data, int *path, int collision)
 	int next;
 	int prev;
 
-	collision *= -1;
 	prev = collision;
 	next = path[collision];
 	while (next != data->start)
@@ -108,27 +132,6 @@ void set_latest_path_obstacle(t_path *data, int collision_point, int *paths)
 		visit = next;
 		next = paths[next];
 		paths[visit] *= -1;
-	}
-}
-
-
-void q_pop_collisions(t_path *data, int *paths)
-{
-	int *new_path;
-	int new_root_node;
-	int collision;
-
-	collision = q_get_next_collision();
-	while (collision)
-	{
-		new_path = dup_path(paths, data->room_count);
-		new_root_node = backtrack_collided_path(data, new_path, collision);
-		new_path[collision] = q_peek();
-		remove_residue(data, paths);
-		set_latest_path_obstacle(data, collision, new_path);
-		bfs(data, new_path, new_root_node);
-		q_pop(collision);
-		collision = q_get_next_collision();
 	}
 }
 
@@ -157,54 +160,95 @@ int q_has_end(int end)
 	return (0);
 }
 
-int is_neighbour(t_path *data, int room, int room2)
+int is_end_path(t_path *data, int room, int *paths)
 {
-	if((data->adj_grid)[data->end][room)
+	if((data->adj_grid)[data->end][room] && paths[room])
 		return (1);
 	return(0);
 }
 
-int is_new_path(t_path *data, int *paths, int *used_paths, int start)
+int		is_new_path(t_path *data, int *old_paths, int *new_paths, int end)
 {
-	if(paths[start])
-	/// @brief //////// HERHERHEHRHERHEHREHRH 
-	/// @param data 
-	/// @param paths 
-	/// @param used_paths 
-	/// @param start 
-	/// @return 
+	while(end != data->start)
+	{
+		if(new_paths[end])
+			return(0);
+		end = old_paths[end];
+	}
 	return (1);
 }
 
 
-
-void remove_residue(t_path *data, int *paths)
+void	cpy_new_path(t_path *data, int *old_paths, int *new_paths, int end)
 {
-	int *used_paths;
-	int room;
+	while(end != data->start)
+	{
+		new_paths[end] = old_paths[end];
+		end = old_paths[end];
+	}
+}
+
+void	remove_residue(t_path *data, int *paths)
+{
+	int *new_paths;
 	int i;
 
 	i = 0;
-	used_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	if (!used_paths)
+	new_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
+	if (!new_paths)
 		exit(1);
+
 	q_add_queue(data->room_count);
 	while(data->room_count > i)
 	{
-		if (is_neighbour(data, room, data->end))
+		if (is_end_path(data, i, paths))
 			q_enqueue(i);
 		++i;
 	}
 	while(!q_is_empty())
 	{
-		if(is_new_path(paths, used_paths, q_peek()))
-			cpy_path(q_peek());
+		if (is_new_path(data, paths, new_paths, q_peek()))
+			cpy_new_path(data, paths, new_paths, q_peek());
 		q_dequeue();
 	}		
-	ft_memmove(paths, used_paths, sizeof(int) * data->room_count);
-	free(used_paths);
-	used_paths = NULL;
+	ft_memmove(paths, new_paths, sizeof(int) * data->room_count);
+	free(new_paths);
+	new_paths = NULL;
 	q_delete_queue();
+}
+
+void q_pop_collisions(t_path *data, int *paths)
+{
+	int *new_paths;
+	int new_root_node;
+	int collision;
+
+	collision = q_get_next_collision();
+	while (collision)
+	{
+		new_paths = dup_path(paths, data->room_count);
+		new_root_node = backtrack_collided_path(data, new_paths, collision);
+		new_paths[collision] = q_peek();
+		remove_residue(data, new_paths);
+		set_latest_path_obstacle(data, collision, new_paths);
+		bfs(data, new_paths, new_root_node);
+		q_pop(collision * -1);
+		collision = q_get_next_collision();
+	}
+}
+
+
+void remove_obstacles(int *paths, int paths_size)
+{
+	int i;
+
+	i = 0;
+	while (i < paths_size)
+	{
+		if (paths[i] < 0)
+			paths[i] *= -1;
+		++i;
+	}
 }
 
 void bfs(t_path *data, int *paths, int root_node)
@@ -216,6 +260,7 @@ void bfs(t_path *data, int *paths, int root_node)
 		q_add_adjacent(data, paths);
 		if (q_has_end(data->end))
 		{
+			remove_obstacles(paths, data->room_count);
 			remove_residue(data, paths);
 			get_winner(data, &data->best_path, paths);
 			break;
