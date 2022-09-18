@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:16:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/16 20:22:54 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/18 11:57:21 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ void	remove_residue(t_path *data, int *paths)
 		if (is_new_path(data, paths, new_paths, q_peek()))
 			cpy_new_path(data, paths, new_paths, q_peek());
 		q_dequeue();
-	}		
+	}
 	ft_memmove(paths, new_paths, sizeof(int) * data->room_count);
 	free(new_paths);
 	new_paths = NULL;
