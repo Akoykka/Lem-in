@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 15:20:12 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/16 17:38:59 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/18 11:39:52 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,19 @@ int calc_turns(t_path *data, int *paths)
 }
 
 
-void get_winner(t_path *data, int **best, int *curr_path)
+void get_winner(t_path *data , int *curr_path)
 {
-	if (!*best || calc_turns(data, curr_path) < calc_turns(data, *best))
+	int turns;
+
+	turns = calc_turns(data, curr_path);
+	if (!data->best_path || turns < data->best_turn_count)
 	{
-		free(*best);
-		*best = curr_path;
+		free(data->best_path);
+		data->best_path = NULL;
+		data->best_path = curr_path;
+		data->best_turn_count = turns;
 		data->path_changed = 1;
+		return ;
 	}
 	free(curr_path);
 	curr_path = NULL;
