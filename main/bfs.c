@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:16:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/18 11:57:21 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/19 10:33:08 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,43 +38,72 @@ void q_add_adjacent(t_path *data, int *paths)
 	int room;
 
 	room = 0;
-	while(data->room_count < room)
+	while(data->room_count > room)
 	{
-		if(is_adjacent(data, room))
+		if(is_adjacent(data, room) && !is_obstacle(paths, room))
 		{
 			if (is_collision(paths[room]))
 				q_enqueue(room * -1);
-			if (!is_obstacle(paths, room))
+			else 
 			{
-				paths[room] = q_peek();
+				paths[room] = q_peek() * -1;
 				q_enqueue(room);
 			}
 		}
 		room++;
 	}
 }
-int *q_print_queue()
+void p_p(t_path *data, int *paths)
+{
+	int i;
+
+	i = 0;
+	printf("paths is =");
+	
+	while(data->room_count > i)
+	{
+		printf("|%i|", paths[i]);
+		++i;
+	}
+	printf("\n");	
+}
+
+
+
+void print_int_array(int *arr, int size)
+{
+	int i;
+
+	i = 0;
+	printf("paths is =");
+	
+	while(size > i)
+	{
+		printf("|%i|", arr[i]);
+		++i;
+	}
+	printf("\n");	
+}
+
+void p_q()
 {
 	int *queue;
 	int size;
 	int i;
-	int collision;
 
 	i = 0;
 	queue = q_get_list();
 	size = q_get_len();
 
+	printf("q_print:");
 	while(size > i)
 	{
-		if (queue[i] < 0)
-		{
-			collision = queue[i] * -1;
-			free(queue);
-			queue = NULL;
-			return (collision);
-		}
+		printf("%i - ", queue[i]);
 		++i;
 	}
+	printf("\n");
+	free(queue);
+	queue = NULL;
 }
 
 int q_get_next_collision()
@@ -255,6 +284,7 @@ void bfs(t_path *data, int *paths, int root_node)
 {
 	q_add_queue(data->room_count);
 	q_enqueue(root_node);
+	paths[root_node] = data->start * -1;
 	while(!q_is_empty())
 	{
 		q_add_adjacent(data, paths);
@@ -262,7 +292,7 @@ void bfs(t_path *data, int *paths, int root_node)
 		{
 			remove_obstacles(paths, data->room_count);
 			remove_residue(data, paths);
-			get_winner(data, &data->best_path, paths);
+			get_winner(data, paths);
 			break;
 		}
 		q_pop_collisions(data, paths);

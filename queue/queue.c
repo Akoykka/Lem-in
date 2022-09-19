@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 12:31:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/16 19:44:33 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/19 15:32:02 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,28 @@ void q_init()
 	temp->queue_list = (t_qdata **)ft_memalloc(sizeof(t_qdata *) * 1024);
 	if(!temp->queue_list)
 		exit(1);
+	temp->list_size = 1024;
 }
 
-////q_extend_memory()
-//{
-	//asdaadasd
-//}
+void q_extend_memory()
+{
+	t_queue_storage *temp;
+	t_qdata **new_list;
+	unsigned int i;
+
+	temp = q_storage();
+	i = 0;
+	new_list = (t_qdata **)ft_memalloc(sizeof(t_qdata *) * temp->list_size * 2);
+	if(!new_list)
+		exit(1);
+	while (i < temp->current_list)
+	{
+		new_list[i] = temp->queue_list[i];
+		++i;
+	}
+	free (temp->queue_list);
+	temp->queue_list = new_list;
+}
 
 void q_add_queue(unsigned int size)
 {
@@ -46,12 +62,11 @@ void q_add_queue(unsigned int size)
 	
 	if (temp->list_size)
 		++temp->current_list;
-	//if (temp->list_size == temp->current_list) FIX THIS
-		//extend_memory()
+	if (temp->list_size == temp->current_list)
+		q_extend_memory();
 	temp->queue_list[temp->current_list] = q_new(size);
 	if (!temp->queue_list[temp->current_list])
 		exit(1);
-	++temp->list_size;
 }
 
 void q_delete_queue()
@@ -63,7 +78,6 @@ void q_delete_queue()
 	{
 		free((temp->queue_list)[temp->current_list]);
 		(temp->queue_list)[temp->current_list] = NULL;
-		--temp->list_size;
 		if(temp->current_list)
 			--temp->current_list;
 	}
@@ -175,7 +189,7 @@ void q_destroy()
 	temp = q_storage();
 	if (!temp || temp->queue_list)
 		return;
-	while (i < temp->list_size)
+	while (i < temp->current_list)
 	{
 		free((temp->queue_list)[i]);
 		(temp->queue_list)[i] = NULL;

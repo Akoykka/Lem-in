@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 11:40:59 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/16 17:47:54 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/19 14:55:49 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	q_destroy(void);
 // STORAGE
 t_queue_storage	*q_storage(void);
 t_qdata 		*q_get(void);
+void			q_extend_memory(void);
 
 // FUNCTIONS
 void	q_enqueue(int content);

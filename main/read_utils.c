@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 18:19:27 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/16 19:07:57 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/19 12:25:51 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ unsigned int count_input_lines(void)
 void make_grid(t_path *data)
 {
 	int i;
+	
 	i = 0;
-
 	data->adj_grid = (int **)ft_memalloc(sizeof(int *) * data->room_count);
 	if (!data->adj_grid)
 		exit(1);
@@ -51,9 +51,11 @@ void allocate_memory(t_path *data)
 {
 	unsigned int total_input_lines;
 
-	total_input_lines = 10000;//count_input_lines();
+	total_input_lines = 100;//count_input_lines();
 	hash_init(total_input_lines * 3);
 	data->room_list = (char **)ft_memalloc(sizeof(char *) * total_input_lines);
 	if (!data->room_list)
 		exit(1);
+	data->room_list[0] = ft_memalloc(sizeof(char) * total_input_lines);
+	++data->room_count;
 }

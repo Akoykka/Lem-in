@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/18 11:39:51 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/19 13:01:21 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ typedef struct s_turns
 	int path_count;
 }			t_turns;
 
+// DEBUG
+void			q_print_queue();
+void			print_int_array(int *arr, int size);
+
 /// READ INPUT
 void			read_input(t_path *data);
 int				is_cmd_or_comment(t_path *data, char *line);
@@ -57,14 +61,14 @@ void			allocate_memory(t_path *data);
 
 
 /// BFS
-void q_unused_root_nodes(t_path *data);
-void q_add_adjacent(t_path *data, int *paths);
-int q_get_next_collision(void);
-int q_has_end(int end);
-void q_pop_collisions(t_path *data, int *paths);
+void 			q_unused_root_nodes(t_path *data);
+void			q_add_adjacent(t_path *data, int *paths);
+int				q_get_next_collision(void);
+int				q_has_end(int end);
+void			q_pop_collisions(t_path *data, int *paths);
 
-void bfs(t_path *data, int *paths, int root_node);
-int *dup_path(int *path, int size);
+void			bfs(t_path *data, int *paths, int root_node);
+int				*dup_path(int *path, int size);
 
 
 int		backtrack_collided_path(t_path *data, int *path, int collision);
@@ -90,8 +94,6 @@ int		pathlen(int *paths, int node, int start);
 int		get_turn_count(int ants, t_turns *turns);
 int		calc_turns(t_path *data, int *paths);
 void	get_winner(t_path *data, int *curr_path);
-
-
 
 
 

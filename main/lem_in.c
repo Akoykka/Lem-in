@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/16 20:22:52 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/19 15:49:59 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,45 @@ int *dup_path(int *path, int size)
 	return (new);
 }
 
+void queue_paths_in_print(t_path *data)
+{
+	int i;
+
+	i = 0;
+	while(data->room_count > i)
+	{
+		if(data->adj_grid[data->end][i] && data->best_path[i])
+		{
+			q_enqueue(i);
+		}
+		++i;
+	}
+}
+
+void print_paths(t_path *data)
+{
+	int i;
+	int len;
+
+	q_add_queue(data->room_count);
+	queue_paths_in_print(data);
+	while(!q_is_empty())
+	{
+		len = 0;
+		i = q_peek();
+		printf("path:");
+		while (i != data->start && len < data->room_count)
+		{
+			printf("|%i|", i);
+			i = data->best_path[i];
+			++len;
+		}
+		printf("len: %i\n", len);
+		q_dequeue();
+	}
+	printf("------------------\n");
+	q_delete_queue();
+}
 
 void get_paths(t_path *data)
 {
@@ -63,6 +102,8 @@ void get_paths(t_path *data)
 			if (data->path_changed)
 			{
 				data->path_changed = 0;
+				if (data->best_path)
+					print_paths(data); ////// DEBUG
 				q_bzero();
 				q_unused_root_nodes(data);
 			}
@@ -73,6 +114,9 @@ void get_paths(t_path *data)
 }
 
 
+
+
+
 int main(void)
 {
 	t_path data;
@@ -81,6 +125,7 @@ int main(void)
 	ft_memset(&data, 0, sizeof(data));
 	read_input(&data);
 	get_paths(&data);
+	print_paths(&data);
 	//march_ants();
 	exit (0);
 }
