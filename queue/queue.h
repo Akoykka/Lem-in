@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 11:40:59 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/13 17:28:38 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/16 17:47:54 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void	q_delete_queue(void);
 void	q_destroy(void);
 
 // STORAGE
-t_queue_storage *q_storage(void);
-t_qdata *q_get(void);
+t_queue_storage	*q_storage(void);
+t_qdata 		*q_get(void);
 
 // FUNCTIONS
 void	q_enqueue(int content);
@@ -46,5 +46,6 @@ void	q_pop(int content);
 int 	q_is_empty(void);
 int		*q_get_list(void);
 int 	q_get_len(void);
-
+void 	q_bzero();
+void 	q_destroy();
 #endif

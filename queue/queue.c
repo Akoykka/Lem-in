@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 12:31:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/13 17:28:28 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/16 19:44:33 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,21 @@ void q_init()
 		exit(1);
 }
 
+////q_extend_memory()
+//{
+	//asdaadasd
+//}
+
 void q_add_queue(unsigned int size)
 {
 	t_queue_storage *temp;
 
 	temp = q_storage();
+	
 	if (temp->list_size)
 		++temp->current_list;
+	//if (temp->list_size == temp->current_list) FIX THIS
+		//extend_memory()
 	temp->queue_list[temp->current_list] = q_new(size);
 	if (!temp->queue_list[temp->current_list])
 		exit(1);
@@ -125,11 +133,19 @@ int q_is_empty()
 	t_qdata *q;
 
 	q = q_get();
-	if (!q->size)
+	if (!q || !q->size)
 		return (1);
 	return(0);
 }
+void q_bzero()
+{
+	t_qdata *temp;
 
+	temp = q_get();
+	ft_bzero(temp->queue, sizeof(int) * temp->size);
+	temp->size = 0;
+}
+ 
 void q_pop(int content)
 {
 	t_qdata			*q;
@@ -149,6 +165,28 @@ void q_pop(int content)
 	ft_memmove(&q->queue[i], &q->queue[i+1], sizeof(int) * (q->size - i));
 	--q->size;
 }
+
+void q_destroy()
+{
+	t_queue_storage *temp;
+	unsigned int i;
+
+	i = 0;
+	temp = q_storage();
+	if (!temp || temp->queue_list)
+		return;
+	while (i < temp->list_size)
+	{
+		free((temp->queue_list)[i]);
+		(temp->queue_list)[i] = NULL;
+	}
+	free(temp->queue_list);
+	temp->queue_list = NULL;
+
+	temp->current_list = 0;
+	temp->list_size = 0;
+}
+
 
 
 t_qdata *q_get(void)

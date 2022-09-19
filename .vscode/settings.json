@@ -2,6 +2,7 @@
 	"files.associations": {
 		"libft.h": "c",
 		"read_input.h": "c",
-		"queue.h": "c"
+		"queue.h": "c",
+		"stdio.h": "c"
 	}
 }
