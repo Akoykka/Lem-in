@@ -1,0 +1,126 @@
+
+adjacency_grid
+
+empty    = 0;
+adjacent = 1
+
+prev_room = oma int_array
+
+
+
+int reroute() is reroute possible 
+
+if yes return (new)travel_dist and get_new route;
+
+
+
+
+
+
+compare new & old move_cost if better draw it;
+
+
+ants - total_travel / room_count = move_cost;
+
+
+
+
+
+
+
+
+start is 0
+end is 1
+#status is included in adjacency
+
+stage 1
+first check input
+count rooms
+
+stage 2
+add rooms
+start from 2
+if ##start
+next = 0
+if ##end
+next = 1
+
+get links with namelist
+
+
+
+Ensiksi valid m
+
+etsi nopein reitti
+
+
+
+
+
+
+Etsi paras reitti jonka kokonaismatka on mahdollisimman 
+pieni ja mahdollisimman monta reittia;
+
+ensimmainen haku hakee kaikki reitit jotka toimivat nopeimman
+reitin kanssa
+
+tehdaan minimi movecost jota lahdetaan alittamaan
+
+sen jalkeen yritetaan sovittaa uutta reittia vapaasta nodesta startista;
+
+mikali vapaasta nodesta aloitettu reitti leikkaa olemassa olevan reitin 
+annetaan uuden reitin menna loppuun asti ja aletaan vertaamaan leikattujen 
+reittien rerouteja kunnes movecost nousee yli uuden loydetyn reitin;
+mikali reroutet loytyy talletaan state
+
+reroute ei voi leikata aikaisempien reittien paalta 
+jotka reroute operaation alla
+
+
+
+PLAN Nr 2
+
+
+Tehdaan adjacency list + paths mihin tallennetaan reitit
+adjacency list toimii myos visited listana (2 means visited_adjacent 1 = adjacent)
+
+haetaan nopein reitti random cellista
+Dfs 
+
+haetaan vapaasta start_noden naapurista uusi reitti endiin
+
+
+mikali sellainen loytyy, niin lisataan se alkuperaiseen pathiin
+
+rentoutetaan adjacencylista  jokaisen haun jalkeen
+
+haetaan niin kauan etta kaikki vapaat start_noden naapurit ovat kaytossa tai reittien
+maara on yhtakuin (get min(start_noden, end_noden )) naapurit.
+
+mikali tulee collision reroute funktioon kopioidaan residual lista 
+
+ei rentouteta adjacencylistaa. mikali reroute ei loyda parempaa versiota 
+ei myoskaan visitoida nodea vaan poistetaan queuesta.
+
+
+
+Taman hetkinen ongelma on dup paths miten tietaa ettei kopioi kahta tieta karttaan
+jotka yhta pitkia 
+		0
+	   / \ 
+  -->  0  0 <--
+	   \  /
+	    END
+
+
+5 pitkia
+
+6 pitka tilalle 
+kokeillaan rerouteja
+
+katkastaan joku 6 
+
+
+
+
+
