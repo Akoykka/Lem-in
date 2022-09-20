@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/19 15:53:29 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/20 12:03:05 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,13 @@ int parse_room(t_path *data, char *line)
 		hash_add(info[0], ft_atoi(info[1]), ft_atoi(info[2]), data->room_count);
 		(data->room_list)[data->room_count] = ft_strdup(info[0]);
 		data->room_count++;
+		ft_free_array(info);
 	}
 	else
+	{
+		parse_link(data, line);
 		return(2);
-	ft_free_array(info);
+	}
 	return(1);
 }
 
@@ -90,32 +93,40 @@ int is_cmd_or_comment(t_path *data, char *line)
 	return (0);
 }
 
+void lst_behead(t_list **alst)
+{
+	t_list *behead;
+
+	if (!alst)
+		return;
+	behead = *alst;
+	*alst = (*alst)->next;
+	free(behead->content);
+	free(behead);
+}
+
+
 void read_input(t_path *data)
 {
-	char	*line;
-	int		ret;
+	t_list	*line;
 	int		stage;
+	int		i;
 
+	i = 0;
 	stage = 0;
-	allocate_memory(data);
-	line = NULL;
-	ret = get_next_line(0, &line);
-	while (ret)
+	line = allocate_memory(data);
+	while (line)
 	{
-		if (ret == -1)
-			exit(-1);
-		if (!is_cmd_or_comment(data, line))
+		if (!is_cmd_or_comment(data, (char *)line->content))
 		{
 			if(stage == 2)
-				parse_link(data, line);
+				parse_link(data, (char *)line->content);
 			if(stage == 1)
-				stage = parse_room(data, line);
+				stage = parse_room(data, (char *)line->content);
 			if(stage == 0)
-				stage = parse_ants(data, line);
+				stage = parse_ants(data, (char *)line->content);
 		}
-		free(line);
-		line = NULL;
-		ret = get_next_line(0, &line);
+		lst_behead(&line);
 	}
 	hash_destroy();
 }

@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/19 15:49:59 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/20 15:21:07 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,21 @@ void queue_paths_in_print(t_path *data)
 	}
 }
 
+void print_neigbours(t_path *data, int room)
+{
+	int i;
+
+	i = 0;
+	printf("Room-name: |%s| index |%i| neighbours are: \n", data->room_list[room], room);
+	while(data->room_count > i)
+	{
+		if(data->adj_grid[room][i])
+			printf("Room name:|%s| index|%i|\n",data->room_list[i], i);
+		++i;
+	}
+}
+
+
 void print_paths(t_path *data)
 {
 	int i;
@@ -90,6 +105,7 @@ void print_paths(t_path *data)
 		q_dequeue();
 	}
 	printf("------------------\n");
+	printf("Current Total Turns = %i\n\n", calc_turns(data, data->best_path));
 	q_delete_queue();
 }
 

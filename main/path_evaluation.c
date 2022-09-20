@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 15:20:12 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/19 11:36:51 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/20 09:50:48 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ int get_turn_count(int ants, t_turns *turns)
 	if (ants - path_ant_cap <= 0)
 		return(2147483647);
 	if ((ants - path_ant_cap) % turns->path_count)
-		return ((ants - path_ant_cap) / turns->path_count + 1) ;
-	return ((ants - path_ant_cap) / turns->path_count);
+		return ((ants - path_ant_cap) / turns->path_count + 1 + turns->longest_len) ;
+	return ((ants - path_ant_cap) / turns->path_count + turns->longest_len);
 }
 
 

@@ -6,29 +6,11 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 18:19:27 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/19 12:25:51 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/20 13:44:34 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-unsigned int count_input_lines(void)
-{
-	char *line;
-	unsigned int total_lines;
-
-	line = NULL;
-	total_lines = 0;
-	while (get_next_line(0, &line) > 0)
-	{
-		//free(*line);
-		//*line = NULL;
-		printf("this is string %s\n", line);
-		ft_strdel(&line);
-		++total_lines;
-	}
-	return(total_lines);
-}
 
 void make_grid(t_path *data)
 {
@@ -47,15 +29,35 @@ void make_grid(t_path *data)
 	}
 }
 
-void allocate_memory(t_path *data)
-{
-	unsigned int total_input_lines;
 
-	total_input_lines = 100;//count_input_lines();
-	hash_init(total_input_lines * 3);
-	data->room_list = (char **)ft_memalloc(sizeof(char *) * total_input_lines);
+t_list *allocate_memory(t_path *data)
+{
+	t_list *fock;
+	int ret;
+	char *line;
+	t_list *new;
+	
+	fock = NULL;
+	ret = get_next_line(0, &line);
+	if (ret == -1)
+		exit(1);
+	
+	while (ret)
+	{
+		if (ret == -1)
+			exit(1);
+		new = ft_lst_new(line, sizeof(char) * ft_strlen(line));
+		if (!new)
+			exit(1);
+		ft_lst_add(&fock, new);
+		ret = get_next_line(0, &line);
+	}
+	hash_init(ft_lst_count(fock) * 7);
+	data->room_list = (char **)ft_memalloc(sizeof(char *) * ft_lst_count(fock));
 	if (!data->room_list)
 		exit(1);
-	data->room_list[0] = ft_memalloc(sizeof(char) * total_input_lines);
-	++data->room_count;
+	data->room_list[0] = ft_memalloc(sizeof(char) * ft_lst_count(fock));
+	data->room_count = 1;
+	ft_lst_reverse(&fock);
+	return(fock);
 }

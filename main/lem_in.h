@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/19 13:01:21 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/20 09:41:51 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int 			parse_ants(t_path *data, char *str);
 /// READ INPUT UTILS
 unsigned int	count_input_lines(void);
 void			make_grid(t_path *data);
-void			allocate_memory(t_path *data);
+t_list			*allocate_memory(t_path *data);
 
 
 /// BFS
