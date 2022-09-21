@@ -6,36 +6,11 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 17:11:10 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/20 14:12:03 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/21 15:54:56 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hash.h"
-#include <stdio.h>
-void hash_debug_print_table(void)
-{
-	t_table *storage;
-	unsigned int total_spaces;
-
-	total_spaces = 0;
-	storage = hash_storage();
-	unsigned long i = 0;
-
-	while(i < storage->table_size)
-	{
-		if(!(storage->table)[i])
-			printf("------ NULL \n");
-		else
-		{
-			printf("Occupied by %s\n", (storage->table)[i]->name);
-			++total_spaces;
-		}
-		++i;
-	}
-	printf("total spaces occupied %i\n out of %lu\n", total_spaces, i);
-
-}
-
 
 unsigned long hash_djb2(char *str)
 {
@@ -129,10 +104,14 @@ t_hash *hash_get(char *name)
 		if (temp->table_size == digest)
 			digest = 0;
 	}
-	ft_putstr("Error, no such name in hashtable (hash_get) Hashname:");
-	ft_putstr(name);
-	printf("digest is %lu\n", digest);
-	ft_putchar('\n');
+	//printf("%s\n", hash_table[5141].name);
+	//printf("maxsize hashtable %lu\n", temp->table_size);
+	//ft_putstr("Error, no such name in hashtable (hash_get) Hashname:");
+	//printf("(printf)%s\n (putstr)\n", name);
+	//ft_putstr(name);
+	//printf("digest is %lu\n", digest);
+	//ft_putchar('\n');
+	//printf("%lu", hash_djb2(name) % temp->table_size);
 	exit(1);
 }
 
@@ -146,15 +125,18 @@ void hash_add(char *name, int x, int y, int number)
 	temp = hash_storage();
 	digest = hash_djb2(name) % temp->table_size;
 	hash_table = temp->table;
-
+	//if (!ft_strcmp(name, "0"))
+		//printf("fakjuu\n");
 	while (hash_table[digest].name)
 	{
 		digest++;
 		if (temp->table_size == digest)
 			digest = 0;
 	}
+	//printf("|%s}", hash_table[digest].name);
 	hash_table[digest].name = ft_strdup(name);
-	if(hash_table[digest].name)
+	//printf("after insertion|%s}", hash_table[digest].name);
+	if(!hash_table[digest].name)
 		exit(1);
 	hash_table[digest].xy[0] = x;
 	hash_table[digest].xy[1] = y;

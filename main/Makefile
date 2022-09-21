@@ -6,7 +6,7 @@
 #    By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/10 11:23:37 by akoykka           #+#    #+#              #
-#    Updated: 2022/09/16 18:25:35 by akoykka          ###   ########.fr        #
+#    Updated: 2022/09/21 16:03:18 by akoykka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ CC=gcc
 FLAGS= -g -o $(NAME) -Wall -Wextra -Werror
 CFLAGS= -g -c -Wall -Wextra -Werror
 SOURCES= lem_in.c read_input.c read_utils.c bfs.c path_evaluation.c
+SOURCES+= debug.c
 OBJECTS=$(SOURCES:%.c=%.o)
 
 LIBFT = ../libft/libft.a

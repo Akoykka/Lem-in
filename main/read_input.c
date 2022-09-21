@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/20 12:03:05 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/21 11:53:58 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,25 +108,25 @@ void lst_behead(t_list **alst)
 
 void read_input(t_path *data)
 {
-	t_list	*line;
+	char	**lines;
 	int		stage;
 	int		i;
 
 	i = 0;
 	stage = 0;
-	line = allocate_memory(data);
-	while (line)
+	lines = allocate_memory(data);
+	while (lines[i])
 	{
-		if (!is_cmd_or_comment(data, (char *)line->content))
+		if (!is_cmd_or_comment(data, lines[i]))
 		{
 			if(stage == 2)
-				parse_link(data, (char *)line->content);
+				parse_link(data, lines[i]);
 			if(stage == 1)
-				stage = parse_room(data, (char *)line->content);
+				stage = parse_room(data, lines[i]);
 			if(stage == 0)
-				stage = parse_ants(data, (char *)line->content);
+				stage = parse_ants(data, lines[i]);
 		}
-		lst_behead(&line);
+		++i;
 	}
 	hash_destroy();
 }

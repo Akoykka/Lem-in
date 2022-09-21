@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:16:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/19 10:33:08 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/21 18:42:58 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,58 +52,6 @@ void q_add_adjacent(t_path *data, int *paths)
 		}
 		room++;
 	}
-}
-void p_p(t_path *data, int *paths)
-{
-	int i;
-
-	i = 0;
-	printf("paths is =");
-	
-	while(data->room_count > i)
-	{
-		printf("|%i|", paths[i]);
-		++i;
-	}
-	printf("\n");	
-}
-
-
-
-void print_int_array(int *arr, int size)
-{
-	int i;
-
-	i = 0;
-	printf("paths is =");
-	
-	while(size > i)
-	{
-		printf("|%i|", arr[i]);
-		++i;
-	}
-	printf("\n");	
-}
-
-void p_q()
-{
-	int *queue;
-	int size;
-	int i;
-
-	i = 0;
-	queue = q_get_list();
-	size = q_get_len();
-
-	printf("q_print:");
-	while(size > i)
-	{
-		printf("%i - ", queue[i]);
-		++i;
-	}
-	printf("\n");
-	free(queue);
-	queue = NULL;
 }
 
 int q_get_next_collision()
@@ -259,6 +207,7 @@ void q_pop_collisions(t_path *data, int *paths)
 		new_root_node = backtrack_collided_path(data, new_paths, collision);
 		new_paths[collision] = q_peek();
 		remove_residue(data, new_paths);
+		get_winner(data, new_paths);
 		set_latest_path_obstacle(data, collision, new_paths);
 		bfs(data, new_paths, new_root_node);
 		q_pop(collision * -1);
@@ -280,11 +229,25 @@ void remove_obstacles(int *paths, int paths_size)
 	}
 }
 
+void	visit_start_nodes(t_path *data, int *path)
+{
+	int i;
+
+	i = 0;
+	while (data->room_count > i)
+	{
+		if (data->adj_grid[data->start][i])
+			path[i] = -1;
+		++i;
+	}
+}
+
 void bfs(t_path *data, int *paths, int root_node)
 {
 	q_add_queue(data->room_count);
 	q_enqueue(root_node);
 	paths[root_node] = data->start * -1;
+	visit_start_nodes(data, paths);
 	while(!q_is_empty())
 	{
 		q_add_adjacent(data, paths);
@@ -298,5 +261,6 @@ void bfs(t_path *data, int *paths, int root_node)
 		q_pop_collisions(data, paths);
 		q_dequeue();
 	}
+//	free (paths);
 	q_delete_queue();
 }

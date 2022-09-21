@@ -6,19 +6,17 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/20 09:41:51 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/21 18:23:24 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEM_IN_H
 # define LEM_IN_H
 # include "../libft/includes/libft.h"
-# include "../libft/includes/get_next_line.h"
 # include "../hash/hash.h"
 # include "../queue/queue.h"
 
-# define ADJ_GRID (data->adj_grid)
-# define ROOM_COUNT (data->room_count)
+# define BUFF_SIZE 1000
 
 # include <stdio.h>
 
@@ -57,7 +55,7 @@ int 			parse_ants(t_path *data, char *str);
 /// READ INPUT UTILS
 unsigned int	count_input_lines(void);
 void			make_grid(t_path *data);
-t_list			*allocate_memory(t_path *data);
+char			**allocate_memory(t_path *data);
 
 
 /// BFS
@@ -93,8 +91,23 @@ int		is_adjacent(t_path *data, int room);
 int		pathlen(int *paths, int node, int start);
 int		get_turn_count(int ants, t_turns *turns);
 int		calc_turns(t_path *data, int *paths);
-void	get_winner(t_path *data, int *curr_path);
+void		get_winner(t_path *data, int *curr_path);
 
 
 
+/// DEBUG FUNCTIONS
+
+
+void ft_print_array(char **strings);
+void ft_print_matrix(t_path *data);
+void p_q();
+void print_neigbours(t_path *data, int room);
+void ft_print_matrix(t_path *data);
+void queue_paths_in_print(t_path *data);
+void hash_debug_print_table(void);
+void print_real_paths(t_path *data, int *path);
+void	print_one_path(t_path *data, int j, int *path);
+void printq_room_names(t_path *data);
+void print_int_array(int *arr, int size);
+void p_p(t_path *data, int *paths);
 #endif

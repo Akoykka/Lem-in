@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 15:20:12 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/20 09:50:48 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/21 18:34:31 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,15 @@ int pathlen(int *paths, int node, int start)
 
 int get_turn_count(int ants, t_turns *turns)
 {
-	int path_ant_cap;
+	int ant_leak;
 
-	path_ant_cap = turns->path_count * turns->longest_len - turns->total_len;
+	ant_leak = turns->path_count * turns->longest_len - turns->total_len;
 
-	if (ants - path_ant_cap <= 0)
+	if (ants - ant_leak <= 0)
 		return(2147483647);
-	if ((ants - path_ant_cap) % turns->path_count)
-		return ((ants - path_ant_cap) / turns->path_count + 1 + turns->longest_len) ;
-	return ((ants - path_ant_cap) / turns->path_count + turns->longest_len);
+	if ((ants - ant_leak) % turns->path_count)
+		return ((ants - ant_leak) / turns->path_count + 1 + turns->longest_len);
+	return ((ants - ant_leak) / turns->path_count + turns->longest_len);
 }
 
 
@@ -50,7 +50,7 @@ int calc_turns(t_path *data, int *paths)
 	ft_memset(&turn_count, 0, sizeof(t_turns));
 	while(data->room_count > i)
 	{
-		if (ADJ_GRID[data->end][i] && paths[i])
+		if (data->adj_grid[data->end][i] && paths[i])
 		{
 			path_len = pathlen(paths, i, data->start);
 			if (path_len > turn_count.longest_len)
@@ -63,21 +63,19 @@ int calc_turns(t_path *data, int *paths)
 	return(get_turn_count(data->ant_count, &turn_count));
 }
 
-
 void get_winner(t_path *data , int *curr_path)
 {
 	int turns;
 
 	turns = calc_turns(data, curr_path);
-	if (!data->best_path || turns < data->best_turn_count)
+	printf("-------------------\n Paths are:\n");
+	print_real_paths(data, curr_path);
+	printf("-------------------\n");
+	printf("\nturns: %i\n\n", turns);
+	if (turns < data->best_turn_count)
 	{
-		free(data->best_path);
-		data->best_path = NULL;
-		data->best_path = curr_path;
+		ft_memmove(data->best_path, curr_path, sizeof(int) * data->room_count);
 		data->best_turn_count = turns;
-		data->path_changed = 1;
-		return ;
 	}
-	free(curr_path);
-	curr_path = NULL;
 }
+
