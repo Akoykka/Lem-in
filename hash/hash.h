@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 17:07:14 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/13 15:51:10 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/20 15:21:09 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct s_hash
 
 typedef struct s_table
 {
-	t_hash			**table;
+	t_hash			*table;
 	unsigned long	table_size;
 }			t_table;
 

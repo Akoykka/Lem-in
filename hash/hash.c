@@ -6,16 +6,51 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 17:11:10 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/13 17:22:46 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/20 12:15:04 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hash.h"
+#include <stdio.h>
+void hash_debug_print_table(void)
+{
+	t_table *storage;
+	unsigned int total_spaces;
 
-unsigned long hash_djb2(char *key)
+	total_spaces = 0;
+	storage = hash_storage();
+	unsigned long i = 0;
+
+	while(i < storage->table_size)
+	{
+		if(!(storage->table)[i])
+			printf("------ NULL \n");
+		else
+		{
+			printf("Occupied by %s\n", (storage->table)[i]->name);
+			++total_spaces;
+		}
+		++i;
+	}
+	printf("total spaces occupied %i\n out of %lu\n", total_spaces, i);
+
+}
+
+
+unsigned long hash_djb2(char *str)
 {
 	unsigned long hash = 5381;
 	int c;
+
+
+
+	while (*str)
+	{
+		c = *str;
+    	hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+	 	++str;
+	}
+	/*int c;
 	int i;
 
 	i = 0;
@@ -24,7 +59,7 @@ unsigned long hash_djb2(char *key)
 		c = key[i];
 		hash = hash * 33 + c;
 		++i;
-	}
+	}*/
 	return (hash);
 }
 
@@ -81,6 +116,8 @@ t_hash *hash_get(char *name)
 	t_table *temp;
 	unsigned long digest;
 	t_hash **hash_table;
+	if(!name)
+		return NULL;
 
 	temp = hash_storage();
 	digest = hash_djb2(name) % temp->table_size;
@@ -90,11 +127,14 @@ t_hash *hash_get(char *name)
 	{
 		if (!ft_strcmp(hash_table[digest]->name, name))
 			return (hash_table[digest]);
-		++digest;
+		digest++;
 		if (temp->table_size == digest)
 			digest = 0;
 	}
-	ft_putstr("Error, no such name in hashtable (hash_get)");
+	ft_putstr("Error, no such name in hashtable (hash_get) Hashname:");
+	ft_putstr(name);
+	printf("digest is %lu\n", digest);
+	ft_putchar('\n');
 	exit(1);
 }
 
@@ -102,7 +142,7 @@ t_hash *hash_new(char *name, int x, int y, int number)
 {
 	t_hash *new;
 	
-	new = ft_memalloc(sizeof(t_hash));
+	new = (t_hash *)ft_memalloc(sizeof(t_hash));
 	if(!new)
 		exit(1);
 	new->name = ft_strdup(name);
@@ -120,6 +160,8 @@ void hash_add(char *name, int x, int y, int number)
 	t_table *temp;
 	unsigned long digest;
 	t_hash **hash_table;
+	if(!name)
+		return ;
 
 	temp = hash_storage();
 	digest = hash_djb2(name) % temp->table_size;
@@ -127,7 +169,7 @@ void hash_add(char *name, int x, int y, int number)
 
 	while (hash_table[digest])
 	{
-		++digest;
+		digest++;
 		if (temp->table_size == digest)
 			digest = 0;
 	}
