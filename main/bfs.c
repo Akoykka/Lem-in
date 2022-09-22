@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:16:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/21 18:42:58 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/22 19:23:37 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,22 +33,17 @@ int is_collision(int node_number)
 	return(0);
 }
 
-void q_add_adjacent(t_path *data, int *paths)
+void q_add_adjacent(t_path *data, int *paths, int *residue)
 {
 	int room;
 
 	room = 0;
 	while(data->room_count > room)
 	{
-		if(is_adjacent(data, room) && !is_obstacle(paths, room))
+		if(is_adjacent(data, room) && !is_WHAT(paths, room))
 		{
-			if (is_collision(paths[room]))
-				q_enqueue(room * -1);
-			else 
-			{
-				paths[room] = q_peek() * -1;
-				q_enqueue(room);
-			}
+			residue[room] = q_peek();
+			q_enqueue(room);
 		}
 		room++;
 	}
@@ -194,41 +189,6 @@ void	remove_residue(t_path *data, int *paths)
 	q_delete_queue();
 }
 
-void q_pop_collisions(t_path *data, int *paths)
-{
-	int *new_paths;
-	int new_root_node;
-	int collision;
-
-	collision = q_get_next_collision();
-	while (collision)
-	{
-		new_paths = dup_path(paths, data->room_count);
-		new_root_node = backtrack_collided_path(data, new_paths, collision);
-		new_paths[collision] = q_peek();
-		remove_residue(data, new_paths);
-		get_winner(data, new_paths);
-		set_latest_path_obstacle(data, collision, new_paths);
-		bfs(data, new_paths, new_root_node);
-		q_pop(collision * -1);
-		collision = q_get_next_collision();
-	}
-}
-
-
-void remove_obstacles(int *paths, int paths_size)
-{
-	int i;
-
-	i = 0;
-	while (i < paths_size)
-	{
-		if (paths[i] < 0)
-			paths[i] *= -1;
-		++i;
-	}
-}
-
 void	visit_start_nodes(t_path *data, int *path)
 {
 	int i;
@@ -242,25 +202,55 @@ void	visit_start_nodes(t_path *data, int *path)
 	}
 }
 
-void bfs(t_path *data, int *paths, int root_node)
+int bfs(t_path *data)
 {
 	q_add_queue(data->room_count);
-	q_enqueue(root_node);
-	paths[root_node] = data->start * -1;
-	visit_start_nodes(data, paths);
+	q_enqueue(data->start);
 	while(!q_is_empty())
 	{
 		q_add_adjacent(data, paths);
 		if (q_has_end(data->end))
 		{
-			remove_obstacles(paths, data->room_count);
-			remove_residue(data, paths);
-			get_winner(data, paths);
-			break;
+			cpy_path(data->best);
+			return (0);
 		}
-		q_pop_collisions(data, paths);
 		q_dequeue();
 	}
-//	free (paths);
 	q_delete_queue();
+	return(1);
 }
+
+void residue(t_path *data, int *paths, int *residue, int start)
+{
+	q_add_queue(data->room_count);
+	q_enqueue(start);
+	while(!q_is_empty())
+	{
+		q_add_adjacent(data);
+
+		if(not visited)
+			if(existing path (points to negative index))
+				temp = where it points and then visit current node
+				goto temp;
+			if (empty_path)
+				visit node
+			
+	}
+	write_residue_to_paths;
+}
+
+
+
+
+Tarvitaan:
+int *cpy_path(t_path *data, int *paths); 
+	ottaa int *arrayn kopioi vaan pathit;
+
+int *make_residue(t_path *data, int *paths); 
+	tekee pathfilusta "peilikuvan" ;
+	peilikuvan pointterit negatiivisilla numeroilla;
+	paitsi startin vieressa olevat positiivisina ;
+	ja end (valmiiksi visitoitu);
+
+
+

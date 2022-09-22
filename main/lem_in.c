@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/21 18:51:26 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/22 19:21:02 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,22 +56,22 @@ int *dup_path(int *path, int size)
 
 void get_paths(t_path *data)
 {
+	char *curr_paths;
+
+	curr_paths = ft_memalloc()
+
+	while (bfs(data))
+	{
+		wait();
+	}
+	
 	q_add_queue(data->room_count);
 	q_unused_root_nodes(data);
-	while (!q_is_empty())
+	while(!q_is_empty())
 	{
-			/*
-			if (data->path_changed)
-			{
-				data->path_changed = 0;
-				//if (data->best_path)
-				//	print_paths(data); ////// DEBUG
-				q_bzero();
-				q_unused_root_nodes(data);
-			}
-			*/
-			bfs(data, dup_path(data->best_path, data->room_count), q_peek());
-			q_dequeue();
+		if (residue(make_residue(data, curr_paths)));
+			write_to_curr_paths();
+		q_dequeue();
 	}
 	q_destroy();
 }
@@ -93,3 +93,15 @@ int main(void)
 	printf("best turns: %d\n", data.best_turn_count);
 	exit (0);
 }
+
+
+
+Tarvitaan:
+int *cpy_path(t_path *data, int *paths); 
+	ottaa int *arrayn kopioi vaan pathit;
+
+int *make_residue(t_path *data, int *paths); 
+	tekee pathfilusta "peilikuvan" ;
+	peilikuvan pointterit negatiivisilla numeroilla;
+	paitsi startin vieressa olevat positiivisina ;
+	ja end (valmiiksi visitoitu);
