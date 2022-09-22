@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:16:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/22 19:23:37 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/22 19:29:56 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,5 +252,13 @@ int *make_residue(t_path *data, int *paths);
 	paitsi startin vieressa olevat positiivisina ;
 	ja end (valmiiksi visitoitu);
 
+int *make_paths(t_path *data int *residue)
 
+ OBS tasta en oo varma tarvitaanko
+
+ Make residue toisinpain
+ kirjottaa muutokset pathiin mita residues loydetaan muutoksia;
+ tehaan nk current state paths jota muokkaillaan 
+ ja vertaillaan data- structin bestiin.
+	
 
