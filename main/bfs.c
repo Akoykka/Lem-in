@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:16:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/22 19:34:20 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/23 13:33:17 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,23 +220,28 @@ int bfs(t_path *data)
 	return(1);
 }
 
-void residue(t_path *data, int *paths, int *residue, int start)
+void bfs_residue(t_path *data, int *paths, int *residue, int start)
 {
-	q_add_queue(data->room_count);
-	q_enqueue(start);
-	while(!q_is_empty())
+	if(adjacent && !is_obstacle)
 	{
-		q_add_adjacent(data);
+		if(is path)
+		{
+			destroy_prev_path
+			visit
+			q_bzero
+			q_enqueue([prev_path_root]);
+		}
+		if(is )
 
-		if(not visited)
-			if(existing path (points to negative index))
-				temp = where it points and then visit current node
-				goto temp;
-			if (empty_path)
-				visit node
-			
+
+
+
 	}
-	write_residue_to_paths;
+
+
+
+
+
 }
 
 

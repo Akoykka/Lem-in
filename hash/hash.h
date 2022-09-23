@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 17:07:14 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/20 14:13:29 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/23 14:32:31 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ typedef struct s_hash
 	char *name;
 	int xy[2];
 	int number;
+	struct s_hash *links;
+	
 }			t_hash;
 
 typedef struct s_table

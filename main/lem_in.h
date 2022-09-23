@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/21 18:23:24 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/23 12:31:28 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ typedef struct s_path
 
 	int		*best_path;
 	int		best_turn_count;
-	int		path_changed;
 }				t_path;
 
 typedef struct s_turns
