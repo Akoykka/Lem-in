@@ -115,7 +115,7 @@ t_hash *hash_get(char *name)
 	exit(1);
 }
 
-void hash_add(char *name, int x, int y, int number)
+void hash_add(char *name, int x, int y, int room_count)
 {
 	t_table *temp;
 	unsigned long digest;
@@ -125,23 +125,21 @@ void hash_add(char *name, int x, int y, int number)
 	temp = hash_storage();
 	digest = hash_djb2(name) % temp->table_size;
 	hash_table = temp->table;
-	//if (!ft_strcmp(name, "0"))
-		//printf("fakjuu\n");
 	while (hash_table[digest].name)
 	{
 		digest++;
 		if (temp->table_size == digest)
 			digest = 0;
 	}
-	//printf("|%s}", hash_table[digest].name);
 	hash_table[digest].name = ft_strdup(name);
-	//printf("after insertion|%s}", hash_table[digest].name);
 	if(!hash_table[digest].name)
 		exit(1);
 	hash_table[digest].xy[0] = x;
 	hash_table[digest].xy[1] = y;
-	hash_table[digest].number = number;
-}	
+	hash_table[digest].links = (t_hash **)ft_memalloc((sizeof(t_hash *) * room_count - 1));
+	if (!hash_table[digest].links)
+		exit (1);
+}
 
 
 t_table *hash_storage(void)

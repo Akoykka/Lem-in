@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 17:07:14 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/23 14:32:31 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/20 14:13:29 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ typedef struct s_hash
 {
 	char *name;
 	int xy[2];
-	int number;
-	struct s_hash *links;
-	
+	int visited;
+	struct t_hash **links;
+	struct t_hash *parent;
 }			t_hash;
 
 typedef struct s_table
@@ -29,7 +29,7 @@ typedef struct s_table
 	unsigned long	table_size;
 }			t_table;
 
-// INIT
+// INIT 
 void 			hash_init(unsigned int table_size);
 void			hash_destroy(void);
 

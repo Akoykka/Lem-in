@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/23 12:31:28 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/21 18:23:24 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,10 @@
 
 typedef struct s_path
 {
-	char	**room_list;
-	int		**adj_grid;
 	int		ant_count;
+	t_hash *start;
+	t_hash *end;
 	int		room_count;
-	int		start;
-	int		end;
-
 	int		*best_path;
 	int		best_turn_count;
 }				t_path;

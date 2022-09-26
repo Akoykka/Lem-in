@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/23 14:39:57 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/21 11:53:58 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,24 @@ int parse_room(t_path *data, char *line)
 	return(1);
 }
 
+void	hash_add_link(char *node1, char *node2)
+{
+	t_hash *room1;
+	t_hash *room2;
+	int i;
+
+	i = 0;
+	room1 = hash_get(node1);
+	room2 = hash_get(node2);
+	while (room1->links[i])
+		i++;
+	room1->links[i] = room2;
+	i = 0;
+	while (room2->links[i])
+		i++;
+	room2->links[i] = room1;
+}
+
 void parse_link(t_path *data, char *str)
 {
 	char **link;
@@ -59,10 +77,7 @@ void parse_link(t_path *data, char *str)
 		exit(1);
 	if (ft_array_len(link) == 2)
 	{
-		room_num = hash_get_number(link[0]);
-		room_num2 = hash_get_number(link[1]);
-		data->adj_grid[room_num][room_num2] = 1;
-		data->adj_grid[room_num2][room_num] = 1;
+		hash_add_link(link[0], link[1]);
 	}
 	ft_free_array(link);
 }
@@ -93,6 +108,19 @@ int is_cmd_or_comment(t_path *data, char *line)
 	return (0);
 }
 
+void lst_behead(t_list **alst)
+{
+	t_list *behead;
+
+	if (!alst)
+		return;
+	behead = *alst;
+	*alst = (*alst)->next;
+	free(behead->content);
+	free(behead);
+}
+
+
 void read_input(t_path *data)
 {
 	char	**lines;
@@ -116,77 +144,4 @@ void read_input(t_path *data)
 		++i;
 	}
 	hash_destroy();
-}
-
-
-int read_stdin(char *buf)
-{
-	int ret;
-
-	ret = 0;
-	ft_memset(buf, 0 , sizeof(char) * 1000 + 1);
-	ret = read(0, buf, 1000);
-	if (ret == -1)
-	{
-			ft_putstr("Read Error\n");
-			exit(1);
-	}
-	return (ret);
-}
-
-char *memory_realloc(char *src, char *src2)
-{
-	unsigned int len;
-	char *new;
-
-	new = NULL;
-	len = 0;
-
-	if (src)
-		len += ft_strlen(src);
-	if (src2)
-		len += ft_strlen(src2);
-
-	new = (char *)ft_memalloc(sizeof(char) * len + 1);
-	if(!new)
-		exit(1);
-
-	if (src)
-		ft_strcat(new, src);
-	if (src2)
-		ft_strcat(new, src2);
-
-	return(new);
-}
-
-char *get_stdin_input(void)
-{
-	char	*line;
-	char	buf[1000 + 1];
-	int		ret;
-	char	*free_er;
-
-	ret = 0;
-	line = NULL;
-	ret = read_stdin(buf);
-	while (ret)
-	{	
-		free_er = line;
-		line = memory_realloc(line, buf);
-		ft_strdel(&free_er);
-		ret = read_stdin(buf);
-	}
-
-	return(line);
-}
-
-char **allocate_memory(t_path *data)
-{
-	char **lines;
-
-	lines = NULL;
-	
-	lines = ft_strsplit(get_stdin_input(), '\n');
-	hash_init(ft_array_len(lines) * 3);
-	return;
 }

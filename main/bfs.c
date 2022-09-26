@@ -6,264 +6,114 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:16:03 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/23 13:33:17 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/21 18:42:58 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-int is_adjacent(t_path *data, int room)
+int get_turn_count(int ants, t_turns *turns)
 {
-	if (data->adj_grid[q_peek()][room] && room != data->start)
-		return (1);
-	return(0);
+	int ant_leak;
+
+	ant_leak = turns->path_count * turns->longest_len - turns->total_len;
+
+	if (ants - ant_leak <= 0)
+		return(2147483647);
+	if ((ants - ant_leak) % turns->path_count)
+		return ((ants - ant_leak) / turns->path_count + 1 + turns->longest_len);
+	return ((ants - ant_leak) / turns->path_count + turns->longest_len);
 }
 
-int is_obstacle(int *paths, int room)
+int	evaluate_best_path(t_path *data)
 {
-	if(paths[room] < 0)
-		return (1);
-	return(0);
-}
-
-int is_collision(int node_number)
-{
-	if (node_number > 0)
-		return (1);
-	return(0);
-}
-
-void q_add_adjacent(t_path *data, int *paths, int *residue)
-{
-	int room;
-
-	room = 0;
-	while(data->room_count > room)
-	{
-		if(is_adjacent(data, room) && !is_WHAT(paths, room))
-		{
-			residue[room] = q_peek();
-			q_enqueue(room);
-		}
-		room++;
-	}
-}
-
-int q_get_next_collision()
-{
-	int *queue;
-	int size;
+	t_hash *temp;
+	t_turns turns;
 	int i;
-	int collision;
+	int len;
 
 	i = 0;
-	queue = q_get_list();
-	size = q_get_len();
-
-	while(size > i)
+	turns.longest_len = -2147483648;
+	turns.total_len = 0;
+	while (data->end->links[i])
 	{
-		if (queue[i] < 0)
+		if (data->end->links[i]->parent)
 		{
-			collision = queue[i] * -1;
-			free(queue);
-			queue = NULL;
-			return (collision);
+			turns.path_count++;
+			len = 1;
+			while (temp != data->start)
+			{
+				temp = hash_get(data->end->links[i]->parent);
+				len++;
+			}
+			turns.total_len += len;
+			if (turns.longest_len < len)
+				turns.longest_len = len;
 		}
-		++i;
+		i++;
 	}
-	free(queue);
-	queue = NULL;
+	turns.path_count = i;
+	return (get_turn_count(data->ant_count, turns));
+}
+
+int		is_end(t_path *data, t_hash *current)
+{
+	int i;
+
+	i = 0;
+
+	while (data->end->links[i])
+	{
+		if (current = data->end->links[i])
+			return (1);
+	}
+
 	return (0);
 }
 
-int backtrack_collided_path(t_path *data, int *path, int collision)
+void	add_neighbors(t_path *data, t_hash *current)
 {
-	int next;
-	int prev;
-
-	prev = collision;
-	next = path[collision];
-	while (next != data->start)
-	{
-		path[prev] = 0;
-		prev = next;
-		next = path[prev];
-	}
-	return(prev);
-}
-
-void set_latest_path_obstacle(t_path *data, int collision_point, int *paths)
-{
-	int next;
-	int visit;
-
-	visit = collision_point;
-	next = collision_point;
-	while (next != data->start)
-	{
-		visit = next;
-		next = paths[next];
-		paths[visit] *= -1;
-	}
-}
-
-int q_has_end(int end)
-{
-	int *queue;
-	int size;
 	int i;
+	int j;
+	int *best_path;
 
 	i = 0;
-	queue = q_get_list();
-	size = q_get_len();
+	j = 0;
 
-	while(size > i)
+	while (current->links[i])
 	{
-		if (queue[i] == end)
+		if (current->links[i].visited == 0)
 		{
-			free(queue);
-			queue = NULL;
-			return(1);
+			q_enqueue(current->links[i]);
+			current->links[i].visited = 1;
+			current->links[i].parent = current;
+			if (is_end(data, current->links[i]))
+				q_bzero();
 		}
 		++i;
 	}
-	free(queue);
-	queue = NULL;
-	return (0);
 }
 
-int is_end_path(t_path *data, int room, int *paths)
+void	get_winner(t_path *data);
 {
-	if((data->adj_grid)[data->end][room] && paths[room])
-		return (1);
-	return(0);
-}
+	int path;
 
-int		is_new_path(t_path *data, int *old_paths, int *new_paths, int end)
-{
-	while(end != data->start)
+	path = evaluate_best_path(data)
+	if (path < data->best_turn_count)
 	{
-		if(new_paths[end])
-			return(0);
-		end = old_paths[end];
-	}
-	return (1);
-}
-
-
-void	cpy_new_path(t_path *data, int *old_paths, int *new_paths, int end)
-{
-	while(end != data->start)
-	{
-		new_paths[end] = old_paths[end];
-		end = old_paths[end];
+		data->best_turn_count = path;
+		copy_best_path(data);
 	}
 }
 
-void	remove_residue(t_path *data, int *paths)
-{
-	int *new_paths;
-	int i;
-
-	i = 0;
-	new_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	if (!new_paths)
-		exit(1);
-
-	q_add_queue(data->room_count);
-	while(data->room_count > i)
-	{
-		if (is_end_path(data, i, paths))
-			q_enqueue(i);
-		++i;
-	}
-	while(!q_is_empty())
-	{
-		if (is_new_path(data, paths, new_paths, q_peek()))
-			cpy_new_path(data, paths, new_paths, q_peek());
-		q_dequeue();
-	}
-	ft_memmove(paths, new_paths, sizeof(int) * data->room_count);
-	free(new_paths);
-	new_paths = NULL;
-	q_delete_queue();
-}
-
-void	visit_start_nodes(t_path *data, int *path)
-{
-	int i;
-
-	i = 0;
-	while (data->room_count > i)
-	{
-		if (data->adj_grid[data->start][i])
-			path[i] = -1;
-		++i;
-	}
-}
-
-int bfs(t_path *data)
+void	bfs(t_path *data, int *paths, int root_node)
 {
 	q_add_queue(data->room_count);
 	q_enqueue(data->start);
-	while(!q_is_empty())
+	while (!q_is_empty)
 	{
-		q_add_adjacent(data, paths);
-		if (q_has_end(data->end))
-		{
-			cpy_path(data->best);
-			return (0);
-		}
+		add_neighbors(data, hash_get(q_peek()));
 		q_dequeue();
 	}
-	q_delete_queue();
-	return(1);
+	get_winner(data);
 }
-
-void bfs_residue(t_path *data, int *paths, int *residue, int start)
-{
-	if(adjacent && !is_obstacle)
-	{
-		if(is path)
-		{
-			destroy_prev_path
-			visit
-			q_bzero
-			q_enqueue([prev_path_root]);
-		}
-		if(is )
-
-
-
-
-	}
-
-
-
-
-
-}
-
-
-
-
-Tarvitaan:
-int *cpy_path(t_path *data, int *paths); 
-	ottaa int *arrayn kopioi vaan pathit;
-
-int *make_residue(t_path *data, int *paths); 
-	tekee pathfilusta "peilikuvan" ;
-	peilikuvan pointterit negatiivisilla numeroilla;
-	paitsi startin vieressa olevat positiivisina ;
-	ja end (valmiiksi visitoitu);
-
-int *make_paths(t_path *data int *residue)
-
- OBS tasta en oo varma tarvitaanko
-
- Make residue toisinpain
- kirjottaa muutokset pathiin mita residues loydetaan muutoksia;
- tehaan nk current state paths jota muokkaillaan 
- ja vertaillaan data- structin bestiin.
-	
-
