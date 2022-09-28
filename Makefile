@@ -1,18 +1,18 @@
-#******************************************************************************#
+# **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: okoponen <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/27 13:55:47 by okoponen          #+#    #+#              #
-#    Updated: 2022/09/27 14:45:18 by okoponen         ###   ########.fr        #
+#    Updated: 2022/09/28 15:50:05 by akoykka          ###   ########.fr        #
 #                                                                              #
-#******************************************************************************#
+# **************************************************************************** #
 
 NAME 	= lem_in
 LIBFT 	= ./libft
-FLAGS   = -Wall -Wextra -Werror
+FLAGS   = -Wall -Wextra -Werror -g
 SRC_DIR = srcs/
 
 DEF_COLOR = \033[0;39m
@@ -20,10 +20,11 @@ RED = \033[1;91m
 GREEN = \033[1;92m
 
 SRC_FILES = hash
-SRC_FILES += bfs
-SRC_FILES += path_evaluation
 SRC_FILES += read_input
+SRC_FILES += lem_in
+SRC_FILES += queue
 SRC_FILES += read_utils
+SRC_FILES += debug
 
 SRC	= $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
 OBJ	= $(addsuffix .o, $(SRC_FILES))
@@ -32,7 +33,7 @@ OBJ	= $(addsuffix .o, $(SRC_FILES))
 
 all : $(NAME)
 
-$(NAME) : $(SRC)
+$(NAME) : $(SRC) Makefile
 	@ make -C $(LIBFT)
 	@ gcc $(FLAGS) -c $(SRC)
 	@ gcc -o $(NAME) -Llibft -lft $(OBJ)

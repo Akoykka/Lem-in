@@ -1,4 +1,4 @@
-#include "lem_in.h"
+#include "../includes/lem_in.h"
 #include <stdio.h>
 
 void p_p(t_path *data, int *paths)
@@ -51,7 +51,7 @@ void p_q()
 	free(queue);
 	queue = NULL;
 }
-
+/*
 void printq_room_names(t_path *data)
 {
 	int *queue;
@@ -112,7 +112,7 @@ void print_real_paths(t_path *data, int *path)
 	q_delete_queue();
 	
 }
-
+*/
 void hash_debug_print_table(void)
 {
 	t_table *storage;
@@ -136,7 +136,7 @@ void hash_debug_print_table(void)
 	printf("total spaces occupied %i\n out of %lu\n", total_spaces, i);
 
 }
-
+/*
 void queue_paths_in_print(t_path *data)
 {
 	int i;
@@ -183,3 +183,4 @@ void print_neigbours(t_path *data, int room)
 		++i;
 	}
 }
+*/

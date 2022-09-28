@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/27 18:40:02 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/28 16:39:34 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,12 @@ int	is_cmd_or_comment(t_path *data, char *line)
 	{
 		if (!ft_strcmp(line, "##start"))
 		{
-				data->start = data->room_count;
+				data->start_id = data->room_count;
 				start_found += 1;
 		}
 		if (!ft_strcmp(line, "##end"))
 		{
-				data->end = data->room_count;
+				data->end_id = data->room_count;
 				end_found += 1;
 		}
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/26 23:10:09 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/28 16:03:16 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_hash
 	int id;
 	char *name;
 	int xy[2];
+	struct s_hash *parent;
 	struct s_hash **links;
 }			t_hash;
 
@@ -36,11 +37,16 @@ typedef struct s_table
 typedef struct s_path
 {
 	int		ant_count;
+	int		start_id;
+	int		end_id;
 	t_hash *start;
 	t_hash *end;
 	int		room_count;
 	t_hash	**room_list;
 }				t_path;
+
+
+
 
 // INIT
 void 			hash_init(unsigned int table_size);
@@ -65,7 +71,7 @@ typedef struct s_turns
 }			t_turns;
 
 // DEBUG
-void			q_print_queue();
+void			q_print_queue(void);
 void			print_int_array(int *arr, int size);
 
 /// READ INPUT
@@ -81,17 +87,14 @@ char			**allocate_memory(t_path *data);
 
 
 /// BFS
-void			bfs(t_path *data, int *paths);
-
-
+void			bfs(t_path *data, int *paths, int root_node);
 
 
 /// PATH EVALUATION
 int		pathlen(int *paths, int node, int start);
 int		get_turn_count(int ants, t_turns *turns);
 int		calc_turns(t_path *data, int *paths);
-void	get_winner(t_path *data, int *winner, int *curr_path);
-
+int		get_winner(t_path *data, int *winner, int winner_turns, int *curr_path);
 
 
 /// DEBUG FUNCTIONS DONT MIND 

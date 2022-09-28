@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 12:31:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/27 18:39:57 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/28 16:39:36 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	*q_get_list(void)
 	q = q_get();
 	if (q->size)
 	{
-		list = (int *)ft_memalloc(sizeof(int) * q->size);
+		list = (int *)ft_memalloc(sizeof(int) * q->size + 1024);
 		if (!list)
 			exit (1);
 		ft_memcpy(list, q->queue, sizeof(int) * q->size);

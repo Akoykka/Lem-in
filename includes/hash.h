@@ -6,22 +6,23 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 17:07:14 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/26 21:10:53 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/28 16:39:38 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
 #ifndef HASH_H
 # define HASH_H
 # include "../libft/includes/libft.h"
 
-/*typedef struct s_hash
+typedef struct s_hash
 {
 	int id;
 	char *name;
 	int xy[2];
 	int visited;
 	struct t_hash **links;
-}			t_hash;*/
+}			t_hash;
 
 typedef struct s_table
 {
@@ -44,3 +45,4 @@ t_hash			*hash_new(char *name, int x, int y, int number);
 t_hash			*hash_get(char *name);
 t_table			*hash_storage(void);
 #endif
+*/

@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/27 18:39:59 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/09/28 16:39:35 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,16 @@ int	get_winner(t_path *data, int *winner, int winner_turns, int *current_path)
 	int	turns;
 
 	turns = calc_turns(data, current_path);
-	printf("-------------------\n Paths are:\n");
-	print_real_paths(data, current_path);
-	printf("-------------------\n");
-	printf("\nturns: %i\n\n", turns);
+	//printf("-------------------\n Paths are:\n");
+	//print_real_paths(data, current_path);
+	//printf("-------------------\n");
+	//printf("\nturns: %i\n\n", turns);
 	if (turns < winner_turns)
 		ft_memmove(winner, current_path, sizeof(int) * data->room_count);
 	return(winner_turns);
 }
 
-void	remove_residue(t_path *data, int *paths)
+void	bfs_trash_collector(t_path *data, int *paths)
 {
 	int	i;
 	int	j;
@@ -109,120 +109,126 @@ void	save_result(t_path *data, int *first_result, int *current_paths)
 	}
 }
 
-void store_n_add_to_prev_q(t_path *data, int *add_to_queue, int indicator)
+int end_has_been_reached(t_path *data, t_hash *current)
 {
 	int i;
 
 	i = 0;
-	if (indicator == 1)
-		return ;
-
-	if (indicator == 0)
+	while (current->links[i])
 	{
-	
+		if (current->links[i] == data->end)
+			return (1);
+		i++;
 	}
-
-	if (indicator == 666)
-	{
-		while(add_to_queue[i])
-		{	
-			q_enqueue(*add_to_queue);
-			++add_to_queue;
-			
-		}
-		free(add_to_queue)
-	}	
-
+	return (0);
 }
 
-
-void	visit_non_residual_nodes(t_path *data, int *current_paths, int start)
+int	visit_non_residual_nodes(t_path *data, int *current_paths, int *residue)
 {
-	int i;
+	int *list;
+	int list_size;
 	int linked_node;
-	int next_found;
-	int add_to_queue;
+	int i;
 
-	add_to_queue = NULL;
+	int j = 0;
 	i = 0;
-	q_add_queue(data->room_count);
-	q_enqueue(start);
-	while(!q_is_empty)
+	list = q_get_list();
+	list_size = q_get_len();
+	while(list_size > i)
 	{	
-		next_found = 0;
-		while (data->room_list[q_peek()]->links[i])
+		j = 0;
+		while(data->room_list[list[i]]->links[j])
 		{
-			linked_node = data->room_list[q_peek()]->links[i];
-			if (current_paths[linked_node] == 0)
+			
+			linked_node = data->room_list[list[i]]->links[j]->id;
+			if (!current_paths[linked_node] || !residue[linked_node] || linked_node != data->start_id)
 			{
-				current_paths[linked_node] = q_peek();
-				q_enqueue(linked_node);
-				next_found = 1;
+				q_add_queue(linked_node);
+				current_paths[linked_node] = list[i];
+				list[list_size] = linked_node;
+				if (end_has_been_reached(data, data->room_list[linked_node]))
+					return (1);
+				list_size++;
+				
 			}
-			++i;
+			j++;	
 		}
-		store_n_add_to_prev_q(&add_to_queue, next_found);
-		q_dequeue();
+		i++;
 	}
-	q_delete_queue();
-	store_n_add_to_prev_q(&add_to_queue, 666); // I dont know how to tdo this/
+	return (0);
 }
 
 
-void visit_residual_nodes(t_path *data, int *current_path)
+int	visit_residual_nodes(t_path *data, int *current_path)
 {
 	int i;
 	int linked_node;
+	int *list;
+	int list_size;
+	int j;
 
 	i = 0;
-	while(!q_is_empty)
+	list = q_get_list();
+	list_size = q_get_len();
+	while (list_size > i)
 	{
-		while (data->room_list[q_peek()]->links[i])
+		j = 0;
+		while (data->room_list[list[i]]->links[j])
 		{
-			linked_node = data->room_list[q_peek()]->links[i];
-			if (current_path[linked_node] < 0)
+			linked_node = data->room_list[list[i]]->links[j]->id;
+			if (!current_path[linked_node] 
+				|| current_path[linked_node] != data->start_id)
 			{
-				q_enqueue(linked_node);
-				current_path[linked_node] = q_peek();
+				current_path[linked_node] = list[i];
+				if (end_has_been_reached(data, data->room_list[linked_node]))
+					return (1);
+				q_add_queue(linked_node);
 			}
-			++i;
+			++j;
 		}
-		q_dequeue();
+		q_pop(list[i]);
+		++i;
 	}
+	return (0);
 }
 
-void	bad_bfs(t_path *data, int *current_paths)
+int	bad_bfs(t_path *data, int *current_paths, int *residue)
 {
 	q_add_queue(data->room_count);
 	q_enqueue(data->start->id);
-	while (!q_is_empty() || has_end_been_reached())
+	while (!q_is_empty())
 	{
-		visit_non_residual_nodes(data, current_paths, q_peek());
-		visit_residual_nodes(data, current_paths);
+		if (visit_non_residual_nodes(data, current_paths, residue))
+			return (1);
+		if (visit_residual_nodes(data, current_paths))
+			return (1);
 	}
-		
+	return (0);
 }
 
 int	*do_stuff_to_paths(t_path *data)
 {
 	int	*winner;
 	int winner_turns;
+	int *residue;
 	int	*current_paths;
 	int	*first_full_set;
 
 	winner_turns = 99999999; /// Work on this.
 	winner = (int *)ft_memalloc(sizeof(int) * data->room_count);
 	current_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	if (!winner || !current_paths)
+	residue = (int *)ft_memalloc(sizeof(int) * data->room_count);
+	if (!winner || !current_paths || !residue)
 		exit(1);
 	first_full_set = NULL;
 	while (first_full_set == NULL || current_paths != first_full_set || current_paths != winner)
 	{
-		bad_bfs(data, current_paths);
-		remove_residue(data, current_paths);
+		while(bad_bfs(data, current_paths, residue))
+			bfs_trash_collector(data, current_paths);
 		winner_turns = get_winner(data, winner, winner_turns, current_paths);
 		if (first_full_set == NULL)
 			save_result(data, first_full_set, current_paths);
+		ft_memcpy(residue, current_paths, sizeof(int) * data->room_count);
 	}
 	free(first_full_set);
 	free(current_paths);
@@ -239,6 +245,8 @@ int	main(void)
 	read_input(&data);
 		//ft_print_array(data.room_list);
 		//ft_print_matrix(&data);
+	data.start = data.room_list[data.start_id];
+	data.end = data.room_list[data.end_id];
 	winner = do_stuff_to_paths(&data);
 		//print_paths(&data);
 		//march_ants(do_stuff_to_paths(data));
