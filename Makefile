@@ -6,11 +6,11 @@
 #    By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/27 13:55:47 by okoponen          #+#    #+#              #
-#    Updated: 2022/09/28 15:50:05 by akoykka          ###   ########.fr        #
+#    Updated: 2022/09/28 16:52:43 by okoponen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME 	= lem_in
+NAME 	= lem-in
 LIBFT 	= ./libft
 FLAGS   = -Wall -Wextra -Werror -g
 SRC_DIR = srcs/

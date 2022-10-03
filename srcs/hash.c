@@ -137,7 +137,7 @@ void	hash_add(char *name, int x, int y, t_path *data)
 	hash_table[digest].id = data->room_count;
 	hash_table[digest].xy[0] = x;
 	hash_table[digest].xy[1] = y;
-	hash_table[digest].links = (t_hash **)ft_memalloc((sizeof(t_hash *) * data->room_count - 1));
+	hash_table[digest].links = (t_hash **)ft_memalloc((sizeof(t_hash *) * data->room_count + 100)); //Used to be -1
 	if (!hash_table[digest].links)
 		exit (1);
 	data->room_list[data->room_count] = &hash_table[digest];

@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 12:31:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/28 16:39:36 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/03 12:12:16 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void	q_init(void)
 	t_queue_storage	*temp;
 
 	temp = q_storage();
-	temp->queue_list = (t_qdata **)ft_memalloc(sizeof(t_qdata *) * 1024);
+	temp->queue_list = (t_qdata **)ft_memalloc(sizeof(t_qdata *) * 4000);
 	if (!temp->queue_list)
 		exit (1);
-	temp->list_size = 1024;
+	temp->list_size = 4000;
 }
 
 void	q_extend_memory(void)
@@ -119,7 +119,7 @@ int	*q_get_list(void)
 	q = q_get();
 	if (q->size)
 	{
-		list = (int *)ft_memalloc(sizeof(int) * q->size + 1024);
+		list = (int *)ft_memalloc(sizeof(int) * q->size);
 		if (!list)
 			exit (1);
 		ft_memcpy(list, q->queue, sizeof(int) * q->size);

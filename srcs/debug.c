@@ -5,12 +5,13 @@ void p_p(t_path *data, int *paths)
 {
 	int i;
 
-	i = 0;
+	i = 1;
 	printf("paths is =");
 	
 	while(data->room_count > i)
 	{
 		printf("|%i|", paths[i]);
+		printf("Name: %s \n ", data->room_list[paths[i]]->name);
 		++i;
 	}
 	printf("\n");	
@@ -21,11 +22,11 @@ void print_int_array(int *arr, int size)
 	int i;
 
 	i = 0;
-	printf("paths is =");
+	printf("paths is =\n");
 	
 	while(size > i)
 	{
-		printf("|%i|", arr[i]);
+		printf("paths[%d]: |%i|\n", i, arr[i]);
 		++i;
 	}
 	printf("\n");	
@@ -184,3 +185,31 @@ void print_neigbours(t_path *data, int room)
 	}
 }
 */
+
+void dem_paths(t_path *data, int *path)
+{
+	int i;
+	int j;
+	int y;
+	int temp[data->room_count];
+
+	y = 0;
+	while (data->end->links[y])
+	{
+		i = data->end->links[y]->id;
+		j = 0;
+		while (i != data->start->id)
+		{
+			temp[j] = path[i];
+			i = path[i];
+		}
+		printf("len = %d ", j);
+		while (j)
+		{
+			printf("%s |%d|-", data->room_list[temp[j]]->name, j);
+			j--;
+		}
+		printf("\n");
+		y++;
+	}
+}
