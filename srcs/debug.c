@@ -262,6 +262,43 @@ void nodes_next_to_end(t_path *data)
 
 }
 
+void print_pathnames(t_path *data, int *arr, int size)
+{
+	int i;
+
+	i = 0;
+	while(size > i)
+	{
+		printf(" |%s|(#%i) -",data->room_list[arr[i]]->name, arr[i]);
+		++i;
+	}
+}
+
+void path_printer(t_path *data, int *paths)
+{
+	int counter = 1;
+	int i = 0;
+	int temp;
+	q_add_queue(data->room_count);
+	while(data->end->links[i])
+	{
+		temp = data->end->links[i]->id;
+		while (temp && temp != data->start->id)
+		{
+			q_enqueue(temp);
+			temp = paths[temp];
+		}
+		printf("%i. [LEN=%i]\t", counter++, q_get_len());
+		printf("(start)|%s|(#%i) -", data->start->name, data->start->id);
+		print_pathnames(data, (ft_invert_int_array(q_get_list(), q_get_len())), q_get_len());
+		printf(" (end)|%s|(#%i)\n", data->end->name, data->end->id);
+		q_bzero();
+		++i;
+	}
+	q_delete_queue();
+}
+
+
 void print_data(t_path *data)
 {
 	printf("ant_count is: %i\n", data->ant_count);
@@ -281,9 +318,14 @@ void print_data(t_path *data)
 	printf("\nRES\t");
 	print_wtabs_list(data->residue, data->room_count);
 
-
-	printf("1ST\t");
-	print_wtabs_list(data->first_full_set, data->room_count);
+	printf("Winner Paths are:\n");
+	path_printer(data, data->winner);
+	printf("Current Paths are:\n");
+	path_printer(data, data->current_paths);
+	printf("Residual Paths are:\n");
+	path_printer(data, data->residue);
+	//printf("1ST\t");
+	//print_wtabs_list(data->first_full_set, data->room_count);
 
 	nodes_next_to_end(data);
 

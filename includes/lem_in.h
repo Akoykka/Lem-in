@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/10/04 05:14:35 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/04 17:58:02 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct s_path
 	int		room_count;
 	t_hash	**room_list;
 
-	int		*first_full_set;
+	int		*end_condition;
 	int		*current_paths;
 	int		*residue;
 
@@ -94,8 +94,8 @@ unsigned int	count_input_lines(void);
 char			**allocate_memory(t_path *data);
 
 
-/// BFS
-void			bfs(t_path *data, int *paths, int root_node);
+
+
 
 
 /// PATH EVALUATION

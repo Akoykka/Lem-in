@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/10/04 06:20:06 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/04 18:43:30 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,7 +280,7 @@ int	visit_residual_nodes(t_path *data, int *current_path)
 
 
 
-int	bad_bfs(t_path *data)
+int	bfs(t_path *data)
 {
 	q_add_queue(data->room_count);
 	q_enqueue(data->start->id);
@@ -288,15 +288,19 @@ int	bad_bfs(t_path *data)
 	{
 		if (visit_non_residual_nodes(data, data->current_paths, data->residue))
 		{
+			q_delete_queue();
 			bfs_trash_collector(data, data->current_paths);
 			return (1);
 		}
 		if (visit_residual_nodes(data, data->current_paths))
 		{
+			q_delete_queue();
 			bfs_trash_collector(data, data->current_paths);
 			return (1);
 		}
 	}
+	q_delete_queue();
+	bfs_trash_collector(data, data->current_paths);
 	return (0);
 }
 
@@ -304,11 +308,14 @@ int is_equal(int *array, int *array2, int size)
 {
 
 	int i;
-	i = 0;
+	i = 1;
 
 	if(!array || !array2 || !size)
 		return (0);
-
+	//printf("this is array1:\n");
+	//print_int_array(array, size);
+	//printf("this is array 2:\n");
+	//print_int_array(array2, size);
 	while(size--)
 	{
 		if (array[i] != array2[i])
@@ -326,35 +333,82 @@ void allocate_memory_for_bfs(t_path *data)
 	data->winner = (int *)ft_memalloc(sizeof(int) * data->room_count);
 	data->current_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
 	data->residue = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	data->first_full_set = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	if (!data->winner || !data->current_paths || !data->residue || !data->first_full_set)
+	data->end_condition = (int *)ft_memalloc(sizeof(int) * data->room_count);
+	if (!data->winner || !data->current_paths || !data->residue )//|| !data->first_full_set)
 		exit(1);
 
-	ft_memset(data->first_full_set, -1, sizeof(int) * data->room_count);
+	//ft_memset(data->first_full_set, -1, sizeof(int) * data->room_count);
+}
+
+void undraw(t_path *data, int end_point)
+{
+	int *temp;
+
+	while(end_point != data->start->id)
+	{
+		temp = &data->winner[end_point];
+		end_point = data->winner[end_point];
+		*temp = 0;
+	}
+}
+
+void redraw(t_path *data)
+{
+	q_add_queue(data->room_count);
+	q_enqueue(data->start->id);
+	while (!q_is_empty())
+	{
+		if (is_adj_node(data, q_peek()) && is_not_visited(data, q_peek))
+		visit(data);
+		add_to_queue(data);
+		if (queue_has_end())
+			break;
+		q_dequeue();
+	}
+	bfs_trash_collector(data, data->winner);
+	q_delete_queue();
+}
+
+
+
+void redraw_paths(t_path *data)
+{
+	int i;
+
+	i = 0;
+	q_add_queue(data->room_count);
+	while(data->end->links[i])
+	{
+		if(data->end->links[i]->id)
+			q_enqueue(data->end->links[i]->id);
+	}
+	while(q_is_empty)
+	{
+		undraw(data, q_peek);
+		redraw(data);
+		q_dequeue();
+	}
+	q_delete_queue();
 }
 
 void do_stuff_to_paths(t_path *data)
 {
 	allocate_memory_for_bfs(data); // I put everything in the data struct residue winner first_full_set etc
 
-
-	//while (!is_equal(data->current_paths, data->first_full_set, data->room_count)
-	//	&& !is_equal(data->current_paths, data->winner, data->room_count))
-	while(data->winner_turns == -1 // default value of winner_turns
-		|| !is_equal(data->winner, data->current_paths, data->room_count))
+	while(1) // default value of winner_turns
 	{
-		while (bad_bfs(data))
+		while (bfs(data))
 		{
 			print_data(data);
 			get_winner(data);
 		}
-
-		ft_memcpy(data->residue, data->current_paths, sizeof(int) * data->room_count);
-		ft_memset(data->current_paths, 0, sizeof(int) * data->room_count);
-		//if (*data->first_full_set == -1) //first_round_as all ints in this array are first set as -1
-		//	ft_memcpy(data->first_full_set, data->current_paths, sizeof(int) * data->room_count);
-
+			if (is_equal(data->winner, data->residue, data->room_count))
+				break ;
+			ft_memcpy(data->residue, data->current_paths, sizeof(int) * data->room_count);
+			ft_memset(data->current_paths, 0, sizeof(int) * data->room_count);
+			
 	}
+	redraw_paths(data);
 }
 
 int	main(void)
