@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/10/03 18:09:50 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/04 06:20:06 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	get_turn_count(int ants, t_turns *turns)
 	int	ant_leak;
 
 	ant_leak = turns->path_count * turns->longest_len - turns->total_len;
-	if (ants - ant_leak <= 0) // Something like this
+	if (ants - ant_leak <= 0) // If extra path does not reduce turn count
 		return(9999999);
 	if ((ants - ant_leak) % turns->path_count)
 		return ((ants - ant_leak) / turns->path_count + 1 + turns->longest_len);
@@ -43,7 +43,7 @@ int	calc_turns(t_path *data, int *paths)
 	int		path_len;
 	t_turns	turn_count;
 
-	i = 1;
+	i = 0;
 	ft_memset(&turn_count, 0, sizeof(t_turns));
 	while (data->end->links[i])
 	{
@@ -60,22 +60,18 @@ int	calc_turns(t_path *data, int *paths)
 	return (get_turn_count(data->ant_count, &turn_count));
 }
 
-int	get_winner(t_path *data, int *winner, int winner_turns, int *current_path)
+void	get_winner(t_path *data)
 {
 	int	turns;
 
-	turns = calc_turns(data, current_path);
-	//printf("-------------------\n Paths are:\n");
-	//print_real_paths(data, current_path);
-	//printf("-------------------\n");
-	//printf("\nturns: %i\n\n", turns);
-	if (turns < winner_turns)
-		ft_memmove(winner, current_path, sizeof(int) * data->room_count);
-	return(winner_turns);
+	turns = calc_turns(data, data->current_paths);
+	if (data->winner_turns == -1
+		|| turns < data->winner_turns)
+	{
+		ft_memmove(data->winner, data->current_paths, sizeof(int) * data->room_count);
+		data->winner_turns = turns;
+	}
 }
-
-
-
 
 void set_path_as_negative_value(t_path *data, int *paths, int end_point)
 {
@@ -135,7 +131,7 @@ void	bfs_trash_collector(t_path *data, int *paths)
 	links = *(data->end->links);
 
 	while(links)
-	{	
+	{
 		if (paths[links->id])
 			set_path_as_negative_value(data, paths, paths[links->id]);
 		++links;
@@ -187,18 +183,6 @@ void	bfs_trash_collector(t_path *data, int *paths)
 }
 */
 
-void	save_result(t_path *data, int *first_result, int *current_paths)
-{
-	first_result = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	if (!first_result)
-	{
-		ft_memcpy(first_result, current_paths, sizeof(int) * data->room_count);
-		exit(1);
-	}
-}
-
-
-
 int *q_get_ptr()
 {
 	t_qdata *temp;
@@ -229,8 +213,8 @@ int	visit_non_residual_nodes(t_path *data, int *current_paths, int *residue)
 	t_hash **link;
 	int i;
 	int j;
-	
-	
+
+
 	i = 0;
 	queue = q_get_ptr();
 	while (i < q_get_len())
@@ -244,7 +228,7 @@ int	visit_non_residual_nodes(t_path *data, int *current_paths, int *residue)
 				&& link[j]->id != data->start->id)
 			{
 				q_enqueue(link[j]->id);
-				current_paths[link[j]->id] = queue[i]; 
+				current_paths[link[j]->id] = queue[i];
 				if (end_has_been_reached(data, data->room_list[link[j]->id]))
 					return (1);
 			}
@@ -274,7 +258,7 @@ int	visit_residual_nodes(t_path *data, int *current_path)
 		node = data->room_list[queue[i]];
 		while (node->links[j])
 		{
-			if (!current_path[node->links[j]->id] 
+			if (!current_path[node->links[j]->id]
 				&& node->links[j]->id != data->start->id)
 			{
 				current_path[node->links[j]->id] = queue[i];
@@ -296,24 +280,35 @@ int	visit_residual_nodes(t_path *data, int *current_path)
 
 
 
-int	bad_bfs(t_path *data, int *current_paths, int *residue)
+int	bad_bfs(t_path *data)
 {
 	q_add_queue(data->room_count);
 	q_enqueue(data->start->id);
 	while (!q_is_empty())
 	{
-		if (visit_non_residual_nodes(data, current_paths, residue))
+		if (visit_non_residual_nodes(data, data->current_paths, data->residue))
+		{
+			bfs_trash_collector(data, data->current_paths);
 			return (1);
-		if (visit_residual_nodes(data, current_paths))
+		}
+		if (visit_residual_nodes(data, data->current_paths))
+		{
+			bfs_trash_collector(data, data->current_paths);
 			return (1);
+		}
 	}
 	return (0);
 }
 
 int is_equal(int *array, int *array2, int size)
 {
+
 	int i;
 	i = 0;
+
+	if(!array || !array2 || !size)
+		return (0);
+
 	while(size--)
 	{
 		if (array[i] != array2[i])
@@ -323,54 +318,53 @@ int is_equal(int *array, int *array2, int size)
 	return(1);
 }
 
-
-int	*do_stuff_to_paths(t_path *data)
+void allocate_memory_for_bfs(t_path *data)
 {
-	int	*winner;
-	int winner_turns;
-	int *residue;
-	int	*current_paths;
-	int	*first_full_set;
-
-	winner_turns = 99999999; /// Work on this.
-	winner = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	current_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	residue = (int *)ft_memalloc(sizeof(int) * data->room_count);
-
-
-
-	if (!winner || !current_paths || !residue)
+	data->start = data->room_list[data->start_id];
+	data->end = data->room_list[data->end_id];
+	data->winner_turns = -1;
+	data->winner = (int *)ft_memalloc(sizeof(int) * data->room_count);
+	data->current_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
+	data->residue = (int *)ft_memalloc(sizeof(int) * data->room_count);
+	data->first_full_set = (int *)ft_memalloc(sizeof(int) * data->room_count);
+	if (!data->winner || !data->current_paths || !data->residue || !data->first_full_set)
 		exit(1);
-	first_full_set = NULL;
-	while (first_full_set == NULL
-		|| (!is_equal(current_paths, first_full_set, data->room_count)
-		&& !is_equal(current_paths, winner, data->room_count)))
+
+	ft_memset(data->first_full_set, -1, sizeof(int) * data->room_count);
+}
+
+void do_stuff_to_paths(t_path *data)
+{
+	allocate_memory_for_bfs(data); // I put everything in the data struct residue winner first_full_set etc
+
+
+	//while (!is_equal(data->current_paths, data->first_full_set, data->room_count)
+	//	&& !is_equal(data->current_paths, data->winner, data->room_count))
+	while(data->winner_turns == -1 // default value of winner_turns
+		|| !is_equal(data->winner, data->current_paths, data->room_count))
 	{
-		while (bad_bfs(data, current_paths, residue))
-			bfs_trash_collector(data, current_paths);
-		bfs_trash_collector(data, current_paths);
-		winner_turns = get_winner(data, winner, winner_turns, current_paths);
-		if (first_full_set == NULL)
-			save_result(data, first_full_set, current_paths);
-		ft_memcpy(residue, current_paths, sizeof(int) * data->room_count);
-		ft_memset(current_paths, 0, sizeof(int) * data->room_count);
+		while (bad_bfs(data))
+		{
+			print_data(data);
+			get_winner(data);
+		}
+
+		ft_memcpy(data->residue, data->current_paths, sizeof(int) * data->room_count);
+		ft_memset(data->current_paths, 0, sizeof(int) * data->room_count);
+		//if (*data->first_full_set == -1) //first_round_as all ints in this array are first set as -1
+		//	ft_memcpy(data->first_full_set, data->current_paths, sizeof(int) * data->room_count);
+
 	}
-	free(first_full_set);
-	free(current_paths);
-	return (winner);
 }
 
 int	main(void)
 {
 	t_path	data;
-	int		*winner;
 
 	q_init();
 	ft_memset(&data, 0, sizeof(data));
 	read_input(&data);
-	data.start = data.room_list[data.start_id];
-	data.end = data.room_list[data.end_id];
-	winner = do_stuff_to_paths(&data);
+	do_stuff_to_paths(&data);
 		//print_paths(&data);
 		//march_ants(do_stuff_to_paths(data));
 	hash_destroy();

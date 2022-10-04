@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 16:48:43 by akoykka           #+#    #+#             */
-/*   Updated: 2022/10/03 17:30:22 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/04 05:14:35 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,13 @@ typedef struct s_path
 	t_hash *end;
 	int		room_count;
 	t_hash	**room_list;
+
+	int		*first_full_set;
+	int		*current_paths;
+	int		*residue;
+
+	int		*winner;
+	int		winner_turns;
 }				t_path;
 
 
@@ -95,12 +102,12 @@ void			bfs(t_path *data, int *paths, int root_node);
 int		pathlen(int *paths, int node, int start);
 int		get_turn_count(int ants, t_turns *turns);
 int		calc_turns(t_path *data, int *paths);
-int		get_winner(t_path *data, int *winner, int winner_turns, int *curr_path);
+void	get_winner(t_path *data);
 
 
-/// DEBUG FUNCTIONS DONT MIND 
+/// DEBUG FUNCTIONS DONT MIND
 
-
+void print_data(t_path *data);
 void ft_print_array(char **strings);
 void ft_print_matrix(t_path *data);
 void p_q(void);

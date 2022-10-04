@@ -7,14 +7,14 @@ void p_p(t_path *data, int *paths)
 
 	i = 1;
 	printf("paths is =");
-	
+
 	while(data->room_count > i)
 	{
 		printf("|%i|", paths[i]);
 		printf("Name: %s \n ", data->room_list[paths[i]]->name);
 		++i;
 	}
-	printf("\n");	
+	printf("\n");
 }
 
 void print_int_array(int *arr, int size)
@@ -23,13 +23,13 @@ void print_int_array(int *arr, int size)
 
 	i = 0;
 	printf("paths is =\n");
-	
+
 	while(size > i)
 	{
 		printf("paths[%d]: |%i|\n", i, arr[i]);
 		++i;
 	}
-	printf("\n");	
+	printf("\n");
 }
 
 void p_q()
@@ -111,7 +111,7 @@ void print_real_paths(t_path *data, int *path)
 		q_dequeue();
 	}
 	q_delete_queue();
-	
+
 }
 */
 void hash_debug_print_table(void)
@@ -212,4 +212,84 @@ void dem_paths(t_path *data, int *path)
 		printf("\n");
 		y++;
 	}
+}
+
+void print_rooms(t_path *data)
+{
+	int i = 1;
+
+	printf("Name:\t");
+	while(i < data->room_count)
+	{
+		printf("%s\t", data->room_list[i++]->name);
+	}
+	printf("\n");
+
+}
+
+void print_wtabs_list(int *list, int size)
+{
+	int i = 1;
+	while(size--)
+	{
+		printf("%i\t", list[i++]);
+	}
+	printf("\n");
+}
+void print_numbers(t_path *data)
+{
+	int i = 1;
+	printf("\t");
+	while(i < data->room_count)
+	{
+		printf("%i\t", i++);
+	}
+	printf("\n");
+}
+
+void nodes_next_to_end(t_path *data)
+{
+	int i;
+
+	i = 0;
+	printf("\nnodes adj to end: ");
+	while(data->end->links[i])
+	{
+		printf("%s (#%i)  ", data->room_list[data->end->links[i]->id]->name, data->room_list[data->end->links[i]->id]->id);
+		++i;
+	}
+	printf("\n");
+
+}
+
+void print_data(t_path *data)
+{
+	printf("ant_count is: %i\n", data->ant_count);
+	printf("room_count is: %i\n", data->room_count);
+	printf("start_id:\t%i\tstart_name:\t%s\n", data->start_id, data->room_list[data->start_id]->name);
+	printf("end_id:\t\t%i \tend_name:\t%s\n", data->end_id, data->room_list[data->end_id]->name);
+	printf("winner_turn is:\t%i\n\n", data->winner_turns);
+
+
+	print_numbers(data);
+	print_rooms(data);
+	printf("\nCUR\t");
+	print_wtabs_list(data->current_paths, data->room_count);
+	printf("WIN\t");
+	print_wtabs_list(data->winner, data->room_count);
+
+	printf("\nRES\t");
+	print_wtabs_list(data->residue, data->room_count);
+
+
+	printf("1ST\t");
+	print_wtabs_list(data->first_full_set, data->room_count);
+
+	nodes_next_to_end(data);
+
+
+
+
+
+
 }
