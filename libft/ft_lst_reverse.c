@@ -12,7 +12,7 @@
 
 #include "includes/libft.h"
 
-void ft_lst_reverse(t_list **head)
+void	ft_lst_reverse(t_list **head)
 {
 	t_list	*temp_prevnode;
 	t_list	*temp;

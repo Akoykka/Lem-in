@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 17:11:10 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/26 23:10:26 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/21 15:53:05 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,131 +21,53 @@ unsigned long	hash_djb2(char *str)
 	while (*str)
 	{
 		c = *str;
-		hash = ((hash << 5) + hash) + c;/* hash * 33 + c */
+		hash = ((hash << 5) + hash) + c;
 		++str;
 	}
-	/*int c;
-	int i;
-
-	i = 0;
-	while (key[i])
-	{
-		c = key[i];
-		hash = hash * 33 + c;
-		++i;
-	}*/
 	return (hash);
 }
 
-int	hash_get_number(char *name)
+t_hash	*hash_get(t_path *data, char *key)
 {
-	t_hash	*temp;
+	unsigned long	digest;
 
-	temp = hash_get(name);
-	return (temp->id);
+	digest = hash_djb2(key) % data->table_size;
+	if (!data->hash_table[digest])
+		error("ERROR: no such link", 19);
+	while (ft_strcmp(key, data->hash_table[digest]->name))
+	{
+		++digest;
+		if (digest == data->table_size)
+			digest = 0;
+		if (!data->hash_table[digest])
+			error("ERROR: no such link", 19);
+	}
+	return (data->hash_table[digest]);
 }
 
-int	*hash_get_coords(char *name)
+void	hash_add(t_path *data, char *name, int x, int y)
 {
-	t_hash	*temp;
+	unsigned long	digest;
 
-	temp = hash_get(name);
-	return (temp->xy);
-}
-
-void	hash_init(unsigned int table_size)
-{
-	t_table	*temp;
-
-	temp = hash_storage();
-	temp->table_size = table_size;
-	temp->table = (t_hash *)ft_memalloc(sizeof(t_hash) * table_size);
-	if (!temp->table)
+	digest = hash_djb2(name) % data->table_size;
+	while (data->hash_table[digest])
+	{
+		if (!ft_strcmp(data->hash_table[digest]->name, name))
+			error("ERROR: Duplicate room", 20);
+		digest++;
+		if (data->table_size == digest)
+			digest = 0;
+	}
+	data->hash_table[digest] = (t_hash *)ft_memalloc(sizeof(t_hash));
+	if (!data->hash_table[digest])
 		exit(1);
-}
-
-void	hash_destroy(void)
-{
-	t_table			*temp;
-	unsigned long	i;
-	t_hash			*hashtable;
-
-	i = 0;
-	temp = hash_storage();
-	hashtable = temp->table;
-	while (temp->table_size > i)
-	{
-		if (hashtable[i].name)
-		{
-			free(hashtable[i].name);
-			hashtable[i].name = NULL;
-		}
-		++i;
-	}
-}
-
-t_hash	*hash_get(char *name)
-{
-	t_table			*temp;
-	unsigned long	digest;
-	t_hash			*hash_table;
-
-	if (!name)
-		return (NULL);
-	temp = hash_storage();
-	digest = hash_djb2(name) % temp->table_size;
-	hash_table = temp->table;
-	while (hash_table[digest].name)
-	{
-		if (!ft_strcmp(hash_table[digest].name, name))
-			return(&hash_table[digest]);
-		digest++;
-		if (temp->table_size == digest)
-			digest = 0;
-	}
-	//printf("%s\n", hash_table[5141].name);
-	//printf("maxsize hashtable %lu\n", temp->table_size);
-	//ft_putstr("Error, no such name in hashtable (hash_get) Hashname:");
-	//printf("(printf)%s\n (putstr)\n", name);
-	//ft_putstr(name);
-	//printf("digest is %lu\n", digest);
-	//ft_putchar('\n');
-	//printf("%lu", hash_djb2(name) % temp->table_size);
-	exit (1);
-}
-
-void	hash_add(char *name, int x, int y, t_path *data)
-{
-	t_table			*temp;
-	unsigned long	digest;
-	t_hash			*hash_table;
-
-	if (!name)
-		return ;
-	temp = hash_storage();
-	digest = hash_djb2(name) % temp->table_size;
-	hash_table = temp->table;
-	while (hash_table[digest].name)
-	{
-		digest++;
-		if (temp->table_size == digest)
-			digest = 0;
-	}
-	hash_table[digest].name = ft_strdup(name);
-	if (!hash_table[digest].name)
-		exit (1);
-	hash_table[digest].id = data->room_count;
-	hash_table[digest].xy[0] = x;
-	hash_table[digest].xy[1] = y;
-	hash_table[digest].links = (t_hash **)ft_memalloc((sizeof(t_hash *) * data->room_count + 100)); //Used to be -1
-	if (!hash_table[digest].links)
-		exit (1);
-	data->room_list[data->room_count] = &hash_table[digest];
-}
-
-t_table	*hash_storage(void)
-{
-	static t_table	storage;
-	
-	return (&storage);
+	data->hash_table[digest]->name = ft_strdup(name);
+	data->hash_table[digest]->links = NULL;
+	if (!data->hash_table[digest]->name)
+		error("Error, malloc (hash_add)", 1);
+	data->hash_table[digest]->id = data->room_count;
+	data->hash_table[digest]->xy[0] = x;
+	data->hash_table[digest]->xy[1] = y;
+	data->hash_table[digest]->link_size = 0;
+	data->room_list[data->room_count] = data->hash_table[digest];
 }

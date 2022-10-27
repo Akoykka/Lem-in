@@ -12,13 +12,13 @@
 
 #include "includes/libft.h"
 
-void ft_lst_move_to_top(t_list **head, t_list *target)
+void	ft_lst_move_to_top(t_list **head, t_list *target)
 {
 	t_list	*temp;
-	
+
 	temp = *head;
 	if (!head || *head == target)
-		return;
+		return ;
 	while (temp)
 	{
 		if (temp->next == target)

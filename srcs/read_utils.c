@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 18:19:27 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/27 18:39:56 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/21 16:57:59 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,7 @@ int	read_stdin(char *buf)
 	ft_memset(buf, 0, sizeof(char) * 1000 + 1);
 	ret = read(0, buf, 1000);
 	if (ret == -1)
-	{
-		ft_putstr("Read Error\n");
-		exit(1);
-	}
+		print_usage();
 	return (ret);
 }
 
@@ -58,42 +55,51 @@ char	*get_stdin_input(void)
 	ret = 0;
 	line = NULL;
 	ret = read_stdin(buf);
+	if (ret == 0)
+		error("ERROR: Input missing", 42);
 	while (ret)
 	{	
 		free_er = line;
 		line = memory_realloc(line, buf);
-		ft_strdel(&free_er);
+		free(free_er);
+		free_er = NULL;
 		ret = read_stdin(buf);
 	}
+	if (!is_valid_input(line))
+		error("ERROR: invalid_input", 14);
 	return (line);
 }
 
-void	ft_print_array(char **strings)
+void	add_link_to_node(t_hash **dst, t_hash **src, int size)
 {
-	unsigned int	i;
+	int	i;
 
 	i = 0;
-	if (!strings)
-		exit (1);
-	while (strings[i])
+	while (size--)
 	{
-		ft_putstr(strings[i]);
-		ft_putchar('\n');
+		dst[i] = src[i];
 		++i;
 	}
+	free(src);
+	src = NULL;
 }
 
 char	**allocate_memory(t_path *data)
 {
 	char	**lines;
+	char	*bigline;
+	int		len;
 
 	lines = NULL;
-	lines = ft_strsplit(get_stdin_input(), '\n');
-	//ft_print_array(lines);
-	hash_init(ft_array_len(lines) * 3);
-	data->room_list = (t_hash **)ft_memalloc(sizeof(t_hash *) * ft_array_len(lines));
-	if (!data->room_list)
-		exit(1);
+	bigline = get_stdin_input();
+	lines = ft_strsplit(bigline, '\n');
+	len = ft_array_len(lines);
+	data->hash_table = (t_hash **)ft_memalloc(sizeof(t_hash *) * (len * 3));
+	data->room_list = (t_hash **)ft_memalloc(sizeof(t_hash *) * (len + 1));
+	data->table_size = len * 3;
+	if (!data->room_list || !data->hash_table)
+		error("ERROR: memory allocation fail", 1);
 	data->room_count = 1;
+	free(bigline);
 	return (lines);
 }

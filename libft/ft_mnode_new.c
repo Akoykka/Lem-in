@@ -12,9 +12,9 @@
 
 #include "includes/libft.h"
 
-t_mnode *ft_mnode_new(void const *content, size_t content_size)
+t_mnode	*ft_mnode_new(void const *content, size_t content_size)
 {
-	t_mnode *fresh;
+	t_mnode	*fresh;
 
 	fresh = (t_mnode *)ft_memalloc(sizeof(t_mnode));
 	if (!fresh)

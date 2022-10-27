@@ -12,7 +12,7 @@
 
 #include "includes/libft.h"
 
-int *ft_invert_int_array(int *array, size_t size)
+int	*ft_invert_int_array(int *array, size_t size)
 {
 	size_t	high;
 	size_t	low;
@@ -22,7 +22,7 @@ int *ft_invert_int_array(int *array, size_t size)
 		return (0);
 	high = size - 1;
 	low = 0;
-	while(high > low)
+	while (high > low)
 	{
 		temp = array[high];
 		array[high] = array[low];

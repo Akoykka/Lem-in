@@ -6,75 +6,33 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 09:44:48 by akoykka           #+#    #+#             */
-/*   Updated: 2022/09/28 16:39:34 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/26 16:06:00 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lem_in.h"
 
-int	parse_ants(t_path *data, char *str)
-{
-	if (ft_isint(str))
-	{
-		data->ant_count = ft_atoi(str);
-	}
-	else
-	{
-		printf("ERROR ANTS");
-		exit (1);
-	}
-	return (1);
-}
-
-int	parse_room(t_path *data, char *line)
-{
-	char	**info;
-
-	info = ft_strsplit(line, ' ');
-	if (ft_array_len(info) == 3 && ft_isint(info[1]) && ft_isint(info[2]))
-	{
-		hash_add(info[0], ft_atoi(info[1]), ft_atoi(info[2]), data);
-		data->room_count++;
-		ft_free_array(info);
-	}
-	else
-	{
-		parse_link(line);
-		return (2);
-	}
-	return (1);
-}
-
-void	hash_add_link(char *node1, char *node2)
+void	hash_add_link(t_path *data, char *key1, char *key2)
 {
 	t_hash	*room1;
 	t_hash	*room2;
-	int		i;
+	t_hash	**list1;
+	t_hash	**list2;
 
-	i = 0;
-	room1 = hash_get(node1);
-	room2 = hash_get(node2);
-	while (room1->links[i])
-		i++;
-	room1->links[i] = room2;
-	i = 0;
-	while (room2->links[i])
-		i++;
-	room2->links[i] = room1;
-}
-
-void	parse_link(char *str)
-{
-	char	**link;
-
-	link = ft_strsplit(str, '-');
-	if (!link)
-		exit (1);
-	if (ft_array_len(link) == 2)
-	{
-		hash_add_link(link[0], link[1]);
-	}
-	ft_free_array(link);
+	room1 = hash_get(data, key1);
+	room2 = hash_get(data, key2);
+	list1 = (t_hash **)ft_memalloc(sizeof(t_hash *) * (room1->link_size + 1));
+	list2 = (t_hash **)ft_memalloc(sizeof(t_hash *) * (room2->link_size + 1));
+	if (!list1 || !list2)
+		error("ERROR: Malloc error (hash_add_link)", 1);
+	add_link_to_node(list1, room1->links, room1->link_size);
+	add_link_to_node(list2, room2->links, room2->link_size);
+	list1[room1->link_size] = room2;
+	room1->link_size += 1;
+	list2[room2->link_size] = room1;
+	room2->link_size += 1;
+	room1->links = list1;
+	room2->links = list2;
 }
 
 int	is_cmd_or_comment(t_path *data, char *line)
@@ -86,22 +44,26 @@ int	is_cmd_or_comment(t_path *data, char *line)
 	{
 		if (!ft_strcmp(line, "##start"))
 		{
-				data->start_id = data->room_count;
-				start_found += 1;
+			data->start_id = data->room_count;
+			++start_found;
 		}
 		if (!ft_strcmp(line, "##end"))
 		{
-				data->end_id = data->room_count;
-				end_found += 1;
+			data->end_id = data->room_count;
+			++end_found;
 		}
 		return (1);
 	}
-	if (line[0] == 'L' ||( line[0] == '#' && line[1] == '#') || start_found == 2 || end_found == 2)
-		exit (1);
+	if (line[0] == '#' && line[1] == '#')
+		error("ERROR: Too many # in line", 3);
+	if (line[0] == 'L')
+		error("ERROR: L in input", 4);
+	if (start_found == 2 || end_found == 2)
+		error("ERROR: Too many end/start nodes", 5);
 	return (0);
 }
 
-void	read_input(t_path *data)
+char	**read_input(t_path *data)
 {
 	char	**lines;
 	int		stage;
@@ -110,12 +72,14 @@ void	read_input(t_path *data)
 	i = 0;
 	stage = 0;
 	lines = allocate_memory(data);
+	if (!lines)
+		error("ERROR: Line memory allocation failed", 8);
 	while (lines[i])
 	{
 		if (!is_cmd_or_comment(data, lines[i]))
 		{
 			if (stage == 2)
-				parse_link(lines[i]);
+				parse_link(data, lines[i]);
 			if (stage == 1)
 				stage = parse_room(data, lines[i]);
 			if (stage == 0)
@@ -123,4 +87,16 @@ void	read_input(t_path *data)
 		}
 		++i;
 	}
+	check_validity(data, lines);
+	return (lines);
+}
+
+void	print_array(char **array)
+{
+	while (*array)
+	{
+		ft_putstr(*array++);
+		ft_putchar('\n');
+	}
+	ft_putchar('\n');
 }

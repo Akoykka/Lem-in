@@ -12,14 +12,14 @@
 
 #include "includes/libft.h"
 
-void ft_mnode_destroy(t_mnode **root)
+void	ft_mnode_destroy(t_mnode **root)
 {
 	size_t	i;
 
 	i = 0;
 	if (!root || !*root)
 		return ;
-	while(i < (*root)->next_size)
+	while (i < (*root)->next_size)
 	{
 		ft_mnode_destroy(&((*root)->next)[i]);
 		++i;

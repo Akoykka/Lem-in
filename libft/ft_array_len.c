@@ -12,12 +12,12 @@
 
 #include "includes/libft.h"
 
-int ft_array_len(char **array)
+int	ft_array_len(char **array)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(array && array[i])
+	while (array && array[i])
 		++i;
-	return(i);
+	return (i);
 }

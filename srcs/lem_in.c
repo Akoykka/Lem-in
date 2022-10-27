@@ -6,421 +6,78 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 15:22:05 by akoykka           #+#    #+#             */
-/*   Updated: 2022/10/04 18:43:30 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/27 09:43:36 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lem_in.h"
 
-int	pathlen(int *paths, int node, int start)
+void	apply_rules(t_path *data, int current, int adj_node)
 {
-	int	len;
-
-	len = 0;
-	while (node != start)
+	if (!against_flow(data, current, adj_node))
 	{
-		node = paths[node];
-		++len;
-	}
-	return (len);
-}
-
-int	get_turn_count(int ants, t_turns *turns)
-{
-	int	ant_leak;
-
-	ant_leak = turns->path_count * turns->longest_len - turns->total_len;
-	if (ants - ant_leak <= 0) // If extra path does not reduce turn count
-		return(9999999);
-	if ((ants - ant_leak) % turns->path_count)
-		return ((ants - ant_leak) / turns->path_count + 1 + turns->longest_len);
-	return ((ants - ant_leak) / turns->path_count + turns->longest_len);
-}
-
-int	calc_turns(t_path *data, int *paths)
-{
-	int		i;
-	int		path_len;
-	t_turns	turn_count;
-
-	i = 0;
-	ft_memset(&turn_count, 0, sizeof(t_turns));
-	while (data->end->links[i])
-	{
-		if (paths[data->end->links[i]->id])
+		if (break_flow(data, current, adj_node))
 		{
-			path_len = pathlen(paths, data->end->links[i]->id, data->start->id);
-			if (path_len > turn_count.longest_len)
-				turn_count.longest_len = path_len;
-			turn_count.total_len += path_len;
-			++turn_count.path_count;
+			appoint_parent(data, current, adj_node);
+			visit(data, data->flow[adj_node]);
+			return ;
 		}
-		++i;
-	}
-	return (get_turn_count(data->ant_count, &turn_count));
-}
-
-void	get_winner(t_path *data)
-{
-	int	turns;
-
-	turns = calc_turns(data, data->current_paths);
-	if (data->winner_turns == -1
-		|| turns < data->winner_turns)
-	{
-		ft_memmove(data->winner, data->current_paths, sizeof(int) * data->room_count);
-		data->winner_turns = turns;
+		if (inside_flow(data, current, adj_node))
+		{
+			visit(data, adj_node);
+			return ;
+		}
+		appoint_parent(data, current, adj_node);
+		visit(data, adj_node);
 	}
 }
 
-void set_path_as_negative_value(t_path *data, int *paths, int end_point)
-{
-	while (paths[end_point] != data->start->id)
-	{
-			paths[end_point] *= -1;
-			end_point = paths[end_point * -1];
-	}
-}
-
-/*void remove_positive_trash(t_path *data, int *paths)
+void	visit_adj_nodes(t_path *data, int node)
 {
 	int	i;
+	int	adj_node;
 
 	i = 0;
-	while(data->room_count > i)
+	
+	while (data->room_list[node]->link_size > i)
 	{
-		if(paths[i] > 0)
-			paths[i] = 0;
-		if(paths[i] < 0)
-			paths[i] *= -1;
-		++i;
-	}
-}*/
-
-void	bfs_trash_collector(t_path *data, int *paths)
-{
-	int i;
-	int j;
-
-	j = 0;
-	while(data->end->links[j])
-	{
-		i = data->end->links[j]->id;
-		while (i != data->start_id && i != 0)
-		{
-			paths[i] *= -1;
-			i = paths[i] * -1;
-		}
-		j++;
-	}
-	i = 0;
-	while (i < data->room_count)
-	{
-		if (paths[i] > 0)
-			paths[i] = 0;
-		if(paths[i] < 0)
-			paths[i] *= -1;
+		adj_node = data->room_list[node]->links[i]->id;
+		apply_rules(data, node, adj_node);
 		++i;
 	}
 }
 
-/*void bfs_trash_collector(t_path *data, int *paths)
+int	augment_paths(t_path *data)
 {
-	t_hash *links;
-
-	links = *(data->end->links);
-
-	while(links)
-	{
-		if (paths[links->id])
-			set_path_as_negative_value(data, paths, paths[links->id]);
-		++links;
-	}
-	remove_positive_trash(data, paths);
-}*/
-
-
-
-/*
-
-void	bfs_trash_collector(t_path *data, int *paths)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	int y = 0;
-	while (y < 360)
-	{
-		printf("paths[%d]: %d\n", y, paths[y]);
-		y++;
-	}
-	while (data->end->links[i])
-	{
-		j = (data->end->links)[i]->id;
-		while (paths[j] != data->start->id) //infinite loop
-		{
-			printf("j: %d\n", j);
-			printf("paths[j]: %d\n", paths[j]);
-			paths[j] *= -1;
-			if (paths[j] < 0)
-				j = paths[j] * -1;
-			else
-				j = paths[j];
-			printf("j: %d\n", j);
-			printf("paths[j]: %d\n", paths[j]);
-			printf("paths[1]: %d\n", paths[1]);
-		}
-		i++;
-	}
-	i = 0;
-	while (paths[i])
-	{
-		if (paths[i] > 0)
-			paths[i] = 0;
-		i++;
-	}
-}
-*/
-
-int *q_get_ptr()
-{
-	t_qdata *temp;
-	int *ptr;
-
-	temp = q_get();
-	ptr = temp->queue;
-	return(ptr);
-}
-
-int end_has_been_reached(t_path *data, t_hash *current)
-{
-	int i;
-
-	i = 0;
-	while (current->links[i])
-	{
-		if (current->links[i] == data->end)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	visit_non_residual_nodes(t_path *data, int *current_paths, int *residue)
-{
-	int *queue;
-	t_hash **link;
-	int i;
-	int j;
-
-
-	i = 0;
-	queue = q_get_ptr();
-	while (i < q_get_len())
-	{
-		link = data->room_list[queue[i]]->links;
-		j = 0;
-		while (link[j])
-		{
-			if (current_paths[link[j]->id] == 0
-				&& residue[link[j]->id] == 0
-				&& link[j]->id != data->start->id)
-			{
-				q_enqueue(link[j]->id);
-				current_paths[link[j]->id] = queue[i];
-				if (end_has_been_reached(data, data->room_list[link[j]->id]))
-					return (1);
-			}
-			++j;
-		}
-		++i;
-	}
-	return (0);
-}
-
-
-int	visit_residual_nodes(t_path *data, int *current_path)
-{
-	int j;
-	int i;
-	t_hash *node;
-	int *queue;
-	int q_size;
-
-	i = 0;
-	queue = q_get_list();
-	q_size = q_get_len();
-
-	while (i < q_size)
-	{
-		j = 0;
-		node = data->room_list[queue[i]];
-		while (node->links[j])
-		{
-			if (!current_path[node->links[j]->id]
-				&& node->links[j]->id != data->start->id)
-			{
-				current_path[node->links[j]->id] = queue[i];
-				if (end_has_been_reached(data, data->room_list[node->links[j]->id]))
-				{
-					free(queue);
-					return (1);
-				}
-				q_enqueue(node->links[j]->id);
-			}
-			++j;
-		}
-		q_pop(queue[i]);
-		++i;
-	}
-	free(queue);
-	return (0);
-}
-
-
-
-int	bfs(t_path *data)
-{
-	q_add_queue(data->room_count);
-	q_enqueue(data->start->id);
+	reset_values(data);
 	while (!q_is_empty())
 	{
-		if (visit_non_residual_nodes(data, data->current_paths, data->residue))
+		visit_adj_nodes(data, q_peek());
+		q_dequeue();
+		if (data->edges[data->end->id])
 		{
+			alter_flow(data);
 			q_delete_queue();
-			bfs_trash_collector(data, data->current_paths);
-			return (1);
-		}
-		if (visit_residual_nodes(data, data->current_paths))
-		{
-			q_delete_queue();
-			bfs_trash_collector(data, data->current_paths);
 			return (1);
 		}
 	}
 	q_delete_queue();
-	bfs_trash_collector(data, data->current_paths);
 	return (0);
-}
-
-int is_equal(int *array, int *array2, int size)
-{
-
-	int i;
-	i = 1;
-
-	if(!array || !array2 || !size)
-		return (0);
-	//printf("this is array1:\n");
-	//print_int_array(array, size);
-	//printf("this is array 2:\n");
-	//print_int_array(array2, size);
-	while(size--)
-	{
-		if (array[i] != array2[i])
-			return (0);
-		++i;
-	}
-	return(1);
-}
-
-void allocate_memory_for_bfs(t_path *data)
-{
-	data->start = data->room_list[data->start_id];
-	data->end = data->room_list[data->end_id];
-	data->winner_turns = -1;
-	data->winner = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	data->current_paths = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	data->residue = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	data->end_condition = (int *)ft_memalloc(sizeof(int) * data->room_count);
-	if (!data->winner || !data->current_paths || !data->residue )//|| !data->first_full_set)
-		exit(1);
-
-	//ft_memset(data->first_full_set, -1, sizeof(int) * data->room_count);
-}
-
-void undraw(t_path *data, int end_point)
-{
-	int *temp;
-
-	while(end_point != data->start->id)
-	{
-		temp = &data->winner[end_point];
-		end_point = data->winner[end_point];
-		*temp = 0;
-	}
-}
-
-void redraw(t_path *data)
-{
-	q_add_queue(data->room_count);
-	q_enqueue(data->start->id);
-	while (!q_is_empty())
-	{
-		if (is_adj_node(data, q_peek()) && is_not_visited(data, q_peek))
-		visit(data);
-		add_to_queue(data);
-		if (queue_has_end())
-			break;
-		q_dequeue();
-	}
-	bfs_trash_collector(data, data->winner);
-	q_delete_queue();
-}
-
-
-
-void redraw_paths(t_path *data)
-{
-	int i;
-
-	i = 0;
-	q_add_queue(data->room_count);
-	while(data->end->links[i])
-	{
-		if(data->end->links[i]->id)
-			q_enqueue(data->end->links[i]->id);
-	}
-	while(q_is_empty)
-	{
-		undraw(data, q_peek);
-		redraw(data);
-		q_dequeue();
-	}
-	q_delete_queue();
-}
-
-void do_stuff_to_paths(t_path *data)
-{
-	allocate_memory_for_bfs(data); // I put everything in the data struct residue winner first_full_set etc
-
-	while(1) // default value of winner_turns
-	{
-		while (bfs(data))
-		{
-			print_data(data);
-			get_winner(data);
-		}
-			if (is_equal(data->winner, data->residue, data->room_count))
-				break ;
-			ft_memcpy(data->residue, data->current_paths, sizeof(int) * data->room_count);
-			ft_memset(data->current_paths, 0, sizeof(int) * data->room_count);
-			
-	}
-	redraw_paths(data);
 }
 
 int	main(void)
 {
-	t_path	data;
+	t_path	*data;
+	char	**input;
 
+	data = (t_path *)ft_memalloc(sizeof(t_path));
 	q_init();
-	ft_memset(&data, 0, sizeof(data));
-	read_input(&data);
-	do_stuff_to_paths(&data);
-		//print_paths(&data);
-		//march_ants(do_stuff_to_paths(data));
-	hash_destroy();
-	exit (666);
+	input = read_input(data);
+	allocate_memory_for_bfs(data);
+	while (augment_paths(data))
+		compare_paths(data);
+	print_answer(data, input);
+	free_all(data, input);
+	return (0);
 }
+
