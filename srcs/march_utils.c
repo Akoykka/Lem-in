@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:10:37 by okoponen          #+#    #+#             */
-/*   Updated: 2022/10/26 16:06:50 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/27 10:01:57 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,10 @@ int	start_is_next_to_end(t_path *data)
 	int	i;
 
 	i = 0;
-	while (i < data->end->link_size)
+	while (i < data->room_list[data->end_id]->link_size)
 	{
-		if (data->end->links[i]->id == data->start->id)
+		if (data->room_list[data->end_id]->links[i]->id 
+			== data->room_list[data->start_id]->id)
 			return (1);
 		++i;
 	}

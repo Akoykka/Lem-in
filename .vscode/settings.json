@@ -1,5 +1,34 @@
 {
-	"files.associations": {
-		"lem_in.h": "c"
+	"version": "0.2.0",
+	"configurations": [
+	{
+		"name": "(lldb) Lem-in",
+		"type": "cppdbg",
+		"request": "launch",
+		"program": "${workspaceFolder}/lem-in",
+		"args": [],
+		"stopAtEntry": true,
+		"cwd": "${workspaceFolder}",
+		"environment": [],
+		"externalConsole": false,
+		"MIMode": "lldb",
+		"setupCommands": [
+		{
+			"text": "settings set target.input-path maps/trace_maps/temp.map"
+		}
+		]
+	,
+	{
+		"name": "C/C++ Runner: Debug Session",
+		"type": "cppdbg",
+		"request": "launch",
+		"args": [],
+		"stopAtEntry": true,
+		"externalConsole": false,
+		"cwd": "/Users/akoykka/workspace/lemin-vog",
+		"program": "/Users/akoykka/workspace/lemin-vog/build/Debug/outDebug",
+		"MIMode": "lldb",
+		"miDebuggerPath": "lldb"
 	}
+	]
 }

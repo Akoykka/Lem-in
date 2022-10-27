@@ -6,7 +6,7 @@
 /*   By: akoykka <akoykka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 12:47:36 by okoponen          #+#    #+#             */
-/*   Updated: 2022/10/27 09:39:06 by akoykka          ###   ########.fr       */
+/*   Updated: 2022/10/27 10:09:16 by akoykka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,6 @@ void strcat_path(t_print *print, int curr_path)
 		curr_path = print->paths[curr_path];
 		pathlen++;
 	}
-	if (pathlen < print->path_count / print->ants_left)
-		strcat_new_ant(print, curr_path);
 }
 
 void	strcat_one_line(t_print *print)
@@ -135,6 +133,7 @@ void	print_answer(t_path *data, char **input)
 	prepare_print(data, &print);
 	while (print.ants_left)
 	{
+		ant_distributor(&print);
 		strcat_one_line(&print);
 		print.moves[print.moves_len++] = '\n';
 	}
