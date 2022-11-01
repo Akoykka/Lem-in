@@ -12,10 +12,10 @@
 
 #include "includes/libft.h"
 
-void ft_lst_push_top(t_list **src, t_list **dest)
+void	ft_lst_push_top(t_list **src, t_list **dest)
 {
 	t_list	*target;
-	
+
 	target = *src;
 	src = &((*src)->next);
 	target->next = *dest;

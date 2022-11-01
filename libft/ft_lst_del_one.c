@@ -12,15 +12,15 @@
 
 #include "includes/libft.h"
 
-void	ft_lst_del_one(t_list **head, t_list *target, void (*del)(void*, size_t))
+void	ft_lst_del_one(t_list **head, t_list *target, \
+		void (*del)(void*, size_t))
 {
-	t_list *temp;
+	t_list	*temp;
 
 	if (!head || !del || target)
 		return ;
 	if (!*head)
 		return ;
-	
 	temp = *head;
 	while (temp->next != target && temp->next)
 	{

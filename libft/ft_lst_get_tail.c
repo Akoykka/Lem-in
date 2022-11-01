@@ -12,10 +12,10 @@
 
 #include "includes/libft.h"
 
-t_list *ft_lst_get_tail(t_list *head)
+t_list	*ft_lst_get_tail(t_list *head)
 {
 	if (!head)
-		return NULL;
+		return (NULL);
 	while (head->next)
 		head = head->next;
 	return (head);
