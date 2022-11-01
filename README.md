@@ -2,7 +2,9 @@
 
 Helsinki Hive (42 school) project;
 
-Project time: ~280 hours in a span of 70 days;
+In collaboration with Otto Koponen;
+
+Personal project time: ~280 hours in a span of 70 days;
 
 Subject:  
 Lem-in pathfinding algorithm, 
