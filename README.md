@@ -12,9 +12,9 @@ Restrictions:
 
 - Allowed functions: write, malloc, free and exit;  
 - All sudden unsuspected terminations and/or leaks result to failing grade;  
-- All code must be written according school 42 norm (see section norm in main page);  
+- All code must be written according to the school 42 norm (see section norm in main page);  
 - Within reasonable time (1 second for 100% grade, 13 seconds to pass);
-- Turn accuracy has be in reasonable scope from optimal (absolute accuracy for 100% grade, under 20 to pass);
+- Turn accuracy has be in reasonable scope from optimal (absolute accuracy for 100% grade, 20 diff to pass);
 
 Problems:
 - Finding all possible combinations of path sets;
