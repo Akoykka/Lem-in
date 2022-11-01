@@ -1,4 +1,4 @@
-# lem_in_himarepo
+# Lem-in path-algorithm
 
 Helsinki Hive (42 school) project;
 
